@@ -360,10 +360,10 @@
         <span class="name">Higgsfield</span>
         <span class="plan">Ultra 6,000 <span class="chev">›</span></span>
       </div>
-      <div class="row hl">
+      <div class="row new" onclick="openModal('trModal')" role="button" tabindex="0" aria-label="Tripo 주요 기능 보기">
         <span class="ico" data-logo="tripo"></span>
         <span class="name">Tripo</span>
-        <span class="plan">Pro</span>
+        <span class="plan">Pro <span class="chev">›</span></span>
       </div>
     </section>
 
@@ -512,6 +512,56 @@
     <div class="modal-foot">
       <a class="tp-dl" href="https://www.topazlabs.com/downloads" target="_blank" rel="noopener">
         다운로드 페이지 열기 ↗
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Tripo 주요 기능 팝업 -->
+<div class="modal-overlay" id="trModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Tripo Pro 주요 기능">
+    <div class="modal-head">
+      <div>
+        <div class="mh-title">Tripo · Pro 요금제</div>
+        <div class="mh-sub">이미지를 3D 모델로 변환하는 AI 서비스</div>
+      </div>
+      <button class="mh-close" type="button" onclick="closeModal('trModal')" aria-label="닫기">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="hf-cap">월 <b>₩20,790</b> · 연 청구 ₩249,480 <span style="color:#c0c5cf;text-decoration:line-through">₩29,700</span></p>
+
+      <div class="mb-sec"><span class="dot"></span>크레딧</div>
+      <div class="hf-chips">
+        <span>월 3,000 크레딧 (≈ 200 모델)</span>
+      </div>
+
+      <div class="mb-sec"><span class="dot"></span>효율성 향상</div>
+      <div class="hf-chips">
+        <span>동시 작업 10개</span>
+        <span>높은 대기열 우선순위</span>
+        <span>비공개 모델 · 상업적 이용</span>
+        <span>배치(Batch) 생성</span>
+        <span>7일 기록 · 무제한 스토리지</span>
+        <span>무제한 일괄 내보내기 · DCC 브릿지</span>
+      </div>
+
+      <div class="mb-sec"><span class="dot"></span>최대 품질</div>
+      <div class="hf-chips">
+        <span>무제한 이미지 생성 액세스</span>
+        <span>HD 모델 액세스</span>
+        <span>스마트 메쉬 액세스</span>
+        <span>멀티뷰 3D 생성</span>
+        <span>스마트 분할</span>
+        <span>Ultra 메쉬 품질</span>
+      </div>
+
+      <div class="hf-note">
+        ※ 무료 플랜의 모든 기능에 더해 위 항목이 제공됩니다.
+      </div>
+    </div>
+    <div class="modal-foot">
+      <a class="modal-link" style="background:#0a0d13;color:#fff" href="https://www.tripo3d.ai" target="_blank" rel="noopener">
+        <img src="Logos/Tripo.png" alt="">Tripo 바로가기 ↗
       </a>
     </div>
   </div>
