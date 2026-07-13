@@ -122,6 +122,45 @@
     box-shadow:0 10px 24px -14px rgba(224,80,159,.4);
   }
 
+  /* 관리자 모드 파란 점 */
+  .admin-dot{
+    display:none;width:12px;height:12px;border-radius:50%;
+    background:#2f6bff;vertical-align:middle;margin-left:6px;
+    box-shadow:0 0 0 4px rgba(47,107,255,.18);
+  }
+  body.admin .admin-dot{display:inline-block;}
+
+  /* 좌하단 톱니바퀴 */
+  .gear-btn{
+    position:fixed;left:16px;bottom:16px;z-index:60;
+    width:44px;height:44px;border-radius:50%;border:none;
+    background:#fff;color:#8a909c;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 22px -10px rgba(30,40,80,.45),0 1px 3px rgba(30,40,80,.08);
+    transition:transform .15s ease,color .15s ease,box-shadow .15s ease;
+  }
+  .gear-btn:hover{transform:rotate(35deg);color:#2f6bff;}
+  .gear-btn svg{width:22px;height:22px;}
+  body.admin .gear-btn{color:#2f6bff;box-shadow:0 8px 22px -10px rgba(47,107,255,.5),0 0 0 2px rgba(47,107,255,.25);}
+
+  /* 관리자 로그인/패널 */
+  .admin-input{
+    width:100%;padding:13px 15px;border-radius:13px;
+    border:1.5px solid #e3e6ec;background:#f7f8fb;
+    font-family:inherit;font-size:16px;font-weight:600;color:#1b1d24;
+    outline:none;transition:border-color .15s ease,background .15s ease;
+  }
+  .admin-input:focus{border-color:#2f6bff;background:#fff;}
+  .admin-msg{margin-top:9px;font-size:12.5px;color:#d94a52;font-weight:600;min-height:16px;}
+  .admin-panel-note{font-size:13px;color:#8a909c;font-weight:500;margin-bottom:14px;}
+  .admin-logout{
+    display:block;width:100%;margin-top:10px;padding:12px;
+    border:none;border-radius:13px;background:#f0f2f6;color:#8a909c;
+    font-family:inherit;font-weight:700;font-size:13.5px;cursor:pointer;
+    transition:background .15s ease;
+  }
+  .admin-logout:hover{background:#e7eaf0;}
+
   /* 갱신 알림 받기 버튼 */
   .notify-wrap{display:flex;justify-content:center;margin-top:34px;}
   .notify-btn{
@@ -297,7 +336,7 @@
 <div class="wrap">
 
   <div class="head">
-    <h1>뉴스디자인 AI툴 구독 현황</h1>
+    <h1>뉴스디자인 AI툴 구독 현황 <span class="admin-dot" title="관리자 모드"></span></h1>
     <div class="mail">newsdesign1991@gmail.com</div>
   </div>
 
@@ -392,14 +431,42 @@
 
   </div>
 
-  <div class="notify-wrap">
-    <button class="notify-btn" id="notifyBtn" type="button" onclick="toggleNotify()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-      <span id="notifyLabel">구독 갱신 알림 받기</span>
-    </button>
-  </div>
-
   <p class="note">영상디자인 | 뉴스 | 문의 : 최재영</p>
+</div>
+
+<!-- 좌하단 관리자 톱니바퀴 -->
+<button class="gear-btn" type="button" onclick="openModal('adminModal')" aria-label="관리자">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+</button>
+
+<!-- 관리자 팝업 -->
+<div class="modal-overlay" id="adminModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="관리자" style="max-width:380px">
+    <div class="modal-head">
+      <div>
+        <div class="mh-title">관리자</div>
+        <div class="mh-sub" id="adminSub">비밀번호를 입력하세요</div>
+      </div>
+      <button class="mh-close" type="button" onclick="closeModal('adminModal')" aria-label="닫기">×</button>
+    </div>
+    <div class="modal-body">
+      <!-- 로그인 전 -->
+      <div id="adminLogin">
+        <input class="admin-input" id="adminPw" type="password" inputmode="numeric" placeholder="비밀번호" autocomplete="off">
+        <div class="admin-msg" id="adminMsg"></div>
+        <a class="modal-link" style="background:#2f6bff;color:#fff;margin-top:4px" href="javascript:void(0)" onclick="doAdminLogin()">로그인</a>
+      </div>
+      <!-- 로그인 후 -->
+      <div id="adminPanel" style="display:none">
+        <p class="admin-panel-note">관리자 모드입니다. 구독 갱신 알림을 켤 수 있어요.</p>
+        <button class="notify-btn" id="notifyBtn" type="button" onclick="toggleNotify()" style="width:100%;justify-content:center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span id="notifyLabel">구독 갱신 알림 받기</span>
+        </button>
+        <button class="admin-logout" type="button" onclick="doAdminLogout()">로그아웃</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ChatGPT 주요 기능 팝업 -->
@@ -731,6 +798,39 @@ document.querySelectorAll('.renew-date[data-sub]').forEach(el=>{
   const s = SUBS[el.getAttribute('data-sub')]; if(!s) return;
   el.textContent = fmtRenew(s.cycle, nextRenew(s.cycle, s.anchor));
 });
+
+/* ===== 관리자 로그인 (비번 7989, 새로고침해도 유지) ===== */
+const ADMIN_PW = "7989";
+function setAdmin(on){
+  document.body.classList.toggle('admin', on);
+  const login = document.getElementById('adminLogin');
+  const panel = document.getElementById('adminPanel');
+  const sub = document.getElementById('adminSub');
+  if(login) login.style.display = on ? 'none' : 'block';
+  if(panel) panel.style.display = on ? 'block' : 'none';
+  if(sub) sub.textContent = on ? '관리자 모드' : '비밀번호를 입력하세요';
+}
+function doAdminLogin(){
+  const inp = document.getElementById('adminPw');
+  const msg = document.getElementById('adminMsg');
+  if(inp.value === ADMIN_PW){
+    localStorage.setItem('nd_admin','1');
+    inp.value=''; if(msg) msg.textContent='';
+    setAdmin(true);
+  } else {
+    if(msg) msg.textContent='비밀번호가 틀렸어요';
+    inp.value=''; inp.focus();
+  }
+}
+function doAdminLogout(){
+  localStorage.removeItem('nd_admin');
+  setAdmin(false);
+}
+document.getElementById('adminPw')?.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){ e.preventDefault(); doAdminLogin(); }
+});
+/* 로드 시 로그인 상태 복원 */
+setAdmin(localStorage.getItem('nd_admin')==='1');
 
 /* ===== 구독 갱신 푸시 알림 (근무표 Supabase 백엔드 재활용) ===== */
 const SUPA_URL = "https://ntpoaqnhnwrpenstqhwb.supabase.co";
