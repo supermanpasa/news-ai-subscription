@@ -7,6 +7,10 @@
 <title>뉴스디자인 AI툴 구독 현황</title>
 <link rel="icon" type="image/png" href="Logos/pavicon.png">
 <link rel="apple-touch-icon" href="Logos/pavicon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="AI 구독">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css">
 <style>
@@ -118,8 +122,24 @@
     box-shadow:0 10px 24px -14px rgba(224,80,159,.4);
   }
 
+  /* 갱신 알림 받기 버튼 */
+  .notify-wrap{display:flex;justify-content:center;margin-top:34px;}
+  .notify-btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 20px;border-radius:999px;border:none;
+    background:#fff;color:#1b1d24;font-weight:700;font-size:14px;
+    font-family:inherit;cursor:pointer;
+    box-shadow:0 8px 20px -14px rgba(30,40,80,.4),0 1px 3px rgba(30,40,80,.06);
+    transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease;
+  }
+  .notify-btn:hover{transform:translateY(-2px);box-shadow:0 13px 28px -12px rgba(30,40,80,.5),0 1px 3px rgba(30,40,80,.06);}
+  .notify-btn svg{width:17px;height:17px;flex:0 0 auto;}
+  .notify-btn.on{background:#e9f7ee;color:#1f9d55;}
+  .notify-btn.on svg{color:#1f9d55;}
+  .notify-btn:disabled{opacity:.6;cursor:default;transform:none;}
+
   .note{
-    margin-top:26px;text-align:center;
+    margin-top:18px;text-align:center;
     color:var(--sub);font-size:13px;font-weight:500;
   }
 
@@ -367,6 +387,13 @@
       </div>
     </section>
 
+  </div>
+
+  <div class="notify-wrap">
+    <button class="notify-btn" id="notifyBtn" type="button" onclick="toggleNotify()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+      <span id="notifyLabel">구독 갱신 알림 받기</span>
+    </button>
   </div>
 
   <p class="note">영상디자인 | 뉴스 | 문의 : 최재영</p>
@@ -625,6 +652,75 @@ document.querySelectorAll('.row.new,.row.linkrow').forEach(row=>{
     if(e.key==='Enter'||e.key===' '){e.preventDefault();row.click();}
   });
 });
+
+/* ===== 구독 갱신 푸시 알림 (근무표 Supabase 백엔드 재활용) ===== */
+const SUPA_URL = "https://ntpoaqnhnwrpenstqhwb.supabase.co";
+const SUPA_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50cG9hcW5obndycGVuc3RxaHdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNzEyMzQsImV4cCI6MjA5Nzg0NzIzNH0.MyX2v56Q8SFqcU56tQfmZZVVr1R-X6BF4iBJautOANs";
+const VAPID_PUBLIC = "BPbuDNOiXuJN5KpRWINHNtAYVlG3Pq6T6KVJ4ABv9PFn9hv8cfMoQXHCWVbLwqvxteVAkxaN4XKX1KOi5lhAMdc";
+
+const nBtn = document.getElementById('notifyBtn');
+const nLabel = document.getElementById('notifyLabel');
+
+function b64ToU8(base64){
+  const pad = '='.repeat((4 - base64.length % 4) % 4);
+  const b = (base64 + pad).replace(/-/g,'+').replace(/_/g,'/');
+  const raw = atob(b); const arr = new Uint8Array(raw.length);
+  for (let i=0;i<raw.length;i++) arr[i]=raw.charCodeAt(i);
+  return arr;
+}
+function setBtn(state){
+  // state: 'off' | 'on' | 'busy'
+  if(state==='on'){ nBtn.classList.add('on'); nLabel.textContent='알림 켜짐 (다시 누르면 끄기)'; nBtn.disabled=false; }
+  else if(state==='busy'){ nBtn.disabled=true; nLabel.textContent='처리 중…'; }
+  else { nBtn.classList.remove('on'); nLabel.textContent='구독 갱신 알림 받기'; nBtn.disabled=false; }
+}
+async function getReg(){ return await navigator.serviceWorker.register('sw.js'); }
+
+async function toggleNotify(){
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)){
+    alert('이 브라우저에서는 알림을 지원하지 않아요.\n아이폰은 이 페이지를 홈화면에 추가한 뒤, 추가된 앱으로 열어서 눌러주세요.');
+    return;
+  }
+  try{
+    setBtn('busy');
+    const reg = await getReg();
+    const existing = await reg.pushManager.getSubscription();
+    if(existing){
+      // 끄기
+      const ep = existing.endpoint;
+      await existing.unsubscribe();
+      await fetch(SUPA_URL+'/rest/v1/sub_push?endpoint=eq.'+encodeURIComponent(ep),{
+        method:'DELETE', headers:{ apikey:SUPA_ANON, Authorization:'Bearer '+SUPA_ANON }
+      });
+      setBtn('off');
+      return;
+    }
+    // 켜기
+    const perm = await Notification.requestPermission();
+    if(perm!=='granted'){ setBtn('off'); alert('알림 권한이 거부되어 있어요. 브라우저/폰 설정에서 이 사이트 알림을 허용해주세요.'); return; }
+    const sub = await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:b64ToU8(VAPID_PUBLIC) });
+    const res = await fetch(SUPA_URL+'/rest/v1/sub_push',{
+      method:'POST',
+      headers:{ apikey:SUPA_ANON, Authorization:'Bearer '+SUPA_ANON, 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates' },
+      body: JSON.stringify({ endpoint: sub.endpoint, sub: sub })
+    });
+    if(!res.ok){ throw new Error('서버 등록 실패 '+res.status); }
+    setBtn('on');
+    alert('알림이 켜졌어요. 구독 만료 7일 전에 알려드릴게요.');
+  }catch(e){
+    console.error(e); setBtn('off');
+    alert('알림 설정 중 문제가 생겼어요: '+(e.message||e));
+  }
+}
+/* 로드 시 현재 상태 반영 */
+(async ()=>{
+  try{
+    if(!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    const reg = await navigator.serviceWorker.register('sw.js');
+    const sub = await reg.pushManager.getSubscription();
+    setBtn(sub ? 'on' : 'off');
+  }catch(_){}
+})();
 </script>
 </body>
 </html>
