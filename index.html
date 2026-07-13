@@ -107,10 +107,10 @@
   .row.expiring{opacity:.42;}
 
   /* highlighted new row */
-  .row.new{
+  .row.new,.row.hl{
     background:var(--pink-bg);
   }
-  .row.new .plan{color:var(--pink-ink);}
+  .row.new .plan,.row.hl .plan{color:var(--pink-ink);}
   .row.new:hover{
     background:#f8d4ec;
     transform:translateX(3px);
@@ -359,6 +359,11 @@
         <span class="name">Higgsfield</span>
         <span class="plan">Ultra 6,000 <span class="chev">›</span></span>
       </div>
+      <div class="row hl">
+        <span class="ico" data-logo="tripo"></span>
+        <span class="name">Tripo</span>
+        <span class="plan">Pro</span>
+      </div>
     </section>
 
   </div>
@@ -522,7 +527,8 @@ const LOGOS = {
   google:"Logos/GoogleAI.png",
   runway:"Logos/Runway.png",
   topaz:"Logos/Topaz.png",
-  higgsfield:"Logos/Higgsfield.png"
+  higgsfield:"Logos/Higgsfield.png",
+  tripo:"Logos/Tripo.png"
 };
 document.querySelectorAll('[data-logo]').forEach(el=>{
   const k=el.getAttribute('data-logo');
