@@ -869,7 +869,7 @@ async function toggleNotify(){
       const ep = existing.endpoint;
       await existing.unsubscribe();
       await fetch(SUPA_URL+'/rest/v1/sub_push?endpoint=eq.'+encodeURIComponent(ep),{
-        method:'DELETE', headers:{ apikey:SUPA_ANON, Authorization:'Bearer '+SUPA_ANON }
+        method:'DELETE', headers:{ apikey:SUPA_ANON }
       });
       setBtn('off');
       return;
@@ -880,7 +880,7 @@ async function toggleNotify(){
     const sub = await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:b64ToU8(VAPID_PUBLIC) });
     const res = await fetch(SUPA_URL+'/rest/v1/sub_push',{
       method:'POST',
-      headers:{ apikey:SUPA_ANON, Authorization:'Bearer '+SUPA_ANON, 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates' },
+      headers:{ apikey:SUPA_ANON, 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates' },
       body: JSON.stringify({ endpoint: sub.endpoint, sub: sub })
     });
     if(!res.ok){ throw new Error('서버 등록 실패 '+res.status); }
