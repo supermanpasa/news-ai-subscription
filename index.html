@@ -251,7 +251,18 @@
   .modal-foot .modal-link,.modal-foot .tp-dl{margin-top:0;}
   .renew-line{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px;}
   .renew-date{font-size:12px;color:#a2a8b4;font-weight:500;}
-  .renew-date.expiring{color:#d94a52;}
+  .renew-date.expiring{color:#d94a52;opacity:.75;}
+
+  /* 계속 갱신 토글 */
+  .renew-toggle{display:inline-flex;align-items:center;gap:7px;cursor:pointer;user-select:none;}
+  .renew-toggle .rt-label{font-size:11.5px;color:#8a909c;font-weight:700;}
+  .renew-toggle input{position:absolute;opacity:0;width:0;height:0;}
+  .rt-track{width:34px;height:20px;border-radius:999px;background:#d3d7df;position:relative;flex:0 0 auto;transition:background .18s ease;}
+  .rt-track::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .18s ease;box-shadow:0 1px 3px rgba(0,0,0,.28);}
+  .renew-toggle input:checked + .rt-track{background:#2f6bff;}
+  .renew-toggle input:checked + .rt-track::after{transform:translateX(14px);}
+  /* 관리자 아닐 때는 보기만 (조작 불가) */
+  body:not(.admin) .renew-toggle{pointer-events:none;opacity:.5;}
   .mb-sec{
     font-size:14px;font-weight:800;color:#1b1d24;
     margin:20px 0 9px;display:flex;align-items:center;gap:7px;
@@ -506,7 +517,7 @@
       </div>
     </div>
     <div class="modal-foot">
-      <div class="renew-line"><span class="renew-date" data-sub="gpt"></span></div>
+      <div class="renew-line"><span class="renew-date" data-sub="gpt"></span><label class="renew-toggle" data-sub="gpt"><span class="rt-label">계속 갱신</span><input type="checkbox" onchange="toggleRenew('gpt',this)"><span class="rt-track"></span></label></div>
       <a class="modal-link" style="background:#0a0d13;color:#fff" href="https://chatgpt.com" target="_blank" rel="noopener">
         <img src="Logos/Chat-GPT.png" alt="">ChatGPT 바로가기 ↗
       </a>
@@ -575,7 +586,7 @@
       </div>
     </div>
     <div class="modal-foot">
-      <div class="renew-line"><span class="renew-date" data-sub="higgsfield"></span></div>
+      <div class="renew-line"><span class="renew-date" data-sub="higgsfield"></span><label class="renew-toggle" data-sub="higgsfield"><span class="rt-label">계속 갱신</span><input type="checkbox" onchange="toggleRenew('higgsfield',this)"><span class="rt-track"></span></label></div>
       <a class="modal-link" style="background:#cdf23a;color:#141414" href="https://higgsfield.ai" target="_blank" rel="noopener">
         <img src="Logos/Higgsfield.png" alt="">Higgsfield 바로가기 ↗
       </a>
@@ -619,7 +630,7 @@
       </div>
     </div>
     <div class="modal-foot">
-      <div class="renew-line"><span class="renew-date" data-sub="runway"></span></div>
+      <div class="renew-line"><span class="renew-date" data-sub="runway"></span><label class="renew-toggle" data-sub="runway"><span class="rt-label">계속 갱신</span><input type="checkbox" onchange="toggleRenew('runway',this)"><span class="rt-track"></span></label></div>
       <a class="modal-link" style="background:#0a0d13;color:#fff" href="https://runwayml.com" target="_blank" rel="noopener">
         <img src="Logos/Runway.png" alt="">Runway 바로가기 ↗
       </a>
@@ -654,7 +665,7 @@
       </div>
     </div>
     <div class="modal-foot">
-      <div class="renew-line"><span class="renew-date" data-sub="topaz"></span></div>
+      <div class="renew-line"><span class="renew-date" data-sub="topaz"></span><label class="renew-toggle" data-sub="topaz"><span class="rt-label">계속 갱신</span><input type="checkbox" onchange="toggleRenew('topaz',this)"><span class="rt-track"></span></label></div>
       <a class="tp-dl" href="https://www.topazlabs.com/downloads" target="_blank" rel="noopener">
         다운로드 페이지 열기 ↗
       </a>
@@ -705,7 +716,7 @@
       </div>
     </div>
     <div class="modal-foot">
-      <div class="renew-line"><span class="renew-date" data-sub="tripo"></span></div>
+      <div class="renew-line"><span class="renew-date" data-sub="tripo"></span><label class="renew-toggle" data-sub="tripo"><span class="rt-label">계속 갱신</span><input type="checkbox" onchange="toggleRenew('tripo',this)"><span class="rt-track"></span></label></div>
       <a class="modal-link" style="background:#0a0d13;color:#fff" href="https://www.tripo3d.ai" target="_blank" rel="noopener">
         <img src="Logos/Tripo.png" alt="">Tripo 바로가기 ↗
       </a>
@@ -772,13 +783,17 @@ document.querySelectorAll('.row.new,.row.linkrow').forEach(row=>{
   });
 });
 
+/* ===== Supabase 설정 (구독일 토글 + 푸시 공용) ===== */
+const SUPA_URL = "https://ntpoaqnhnwrpenstqhwb.supabase.co";
+const SUPA_ANON = "sb_publishable_tHzw8NQdE0n3zDi6PDVZFw_X1eprsEE";
+
 /* ===== 구독 갱신일 표시 (팝업 하단) ===== */
 const SUBS = {
-  gpt:       { cycle:'month', anchor:'2026-08-04' },  // 매월 4일
-  runway:    { cycle:'year',  anchor:'2027-02-13' },
-  topaz:     { cycle:'year',  anchor:'2027-02-13' },
-  higgsfield:{ cycle:'year',  anchor:'2027-07-13' },  // 내년 오늘
-  tripo:     { cycle:'month', anchor:'2026-08-13' },
+  gpt:       { cycle:'month', anchor:'2026-08-04', autorenew:true },  // 매월 4일
+  runway:    { cycle:'year',  anchor:'2027-02-13', autorenew:true },
+  topaz:     { cycle:'year',  anchor:'2027-02-13', autorenew:true },
+  higgsfield:{ cycle:'year',  anchor:'2027-07-13', autorenew:true },  // 내년 오늘
+  tripo:     { cycle:'month', anchor:'2026-08-13', autorenew:true },
 };
 function nextRenew(cycle, anchor){
   const [y,m,d] = anchor.split('-').map(Number);
@@ -794,10 +809,46 @@ function fmtRenew(cycle, dt){
   if (cycle==='month') return `매월 ${dt.getDate()}일 갱신`;
   return `${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일 갱신`;
 }
-document.querySelectorAll('.renew-date[data-sub]').forEach(el=>{
-  const s = SUBS[el.getAttribute('data-sub')]; if(!s) return;
-  el.textContent = fmtRenew(s.cycle, nextRenew(s.cycle, s.anchor));
-});
+function renderSub(key){
+  const s = SUBS[key]; if(!s) return;
+  const dateEl = document.querySelector('.renew-date[data-sub="'+key+'"]');
+  const cb = document.querySelector('.renew-toggle[data-sub="'+key+'"] input');
+  if(cb) cb.checked = s.autorenew;
+  if(dateEl){
+    if(s.autorenew){
+      dateEl.classList.remove('expiring');
+      dateEl.textContent = fmtRenew(s.cycle, nextRenew(s.cycle, s.anchor));
+    } else {
+      dateEl.classList.add('expiring');
+      const [y,m,d] = s.anchor.split('-').map(Number);
+      dateEl.textContent = (s.cycle==='month' ? `매월 ${d}일` : `${y}년 ${m}월 ${d}일`) + ' 만료 예정';
+    }
+  }
+}
+async function loadSubMeta(){
+  try{
+    const res = await fetch(SUPA_URL+'/rest/v1/sub_meta?select=sub_key,autorenew',{headers:{apikey:SUPA_ANON}});
+    if(res.ok){
+      const rows = await res.json();
+      rows.forEach(r=>{ if(SUBS[r.sub_key]) SUBS[r.sub_key].autorenew = r.autorenew; });
+    }
+  }catch(_){}
+  Object.keys(SUBS).forEach(renderSub);
+}
+async function toggleRenew(key, cb){
+  if(!document.body.classList.contains('admin')){ cb.checked = !cb.checked; return; }
+  SUBS[key].autorenew = cb.checked;
+  renderSub(key);
+  try{
+    await fetch(SUPA_URL+'/rest/v1/sub_meta',{
+      method:'POST',
+      headers:{ apikey:SUPA_ANON, 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates' },
+      body: JSON.stringify({ sub_key:key, autorenew:cb.checked })
+    });
+  }catch(e){ console.error(e); }
+}
+Object.keys(SUBS).forEach(renderSub);
+loadSubMeta();
 
 /* ===== 관리자 로그인 (비번 7989, 새로고침해도 유지) ===== */
 const ADMIN_PW = "7989";
@@ -833,8 +884,6 @@ document.getElementById('adminPw')?.addEventListener('keydown', e=>{
 setAdmin(localStorage.getItem('nd_admin')==='1');
 
 /* ===== 구독 갱신 푸시 알림 (근무표 Supabase 백엔드 재활용) ===== */
-const SUPA_URL = "https://ntpoaqnhnwrpenstqhwb.supabase.co";
-const SUPA_ANON = "sb_publishable_tHzw8NQdE0n3zDi6PDVZFw_X1eprsEE";
 const VAPID_PUBLIC = "BPbuDNOiXuJN5KpRWINHNtAYVlG3Pq6T6KVJ4ABv9PFn9hv8cfMoQXHCWVbLwqvxteVAkxaN4XKX1KOi5lhAMdc";
 
 const nBtn = document.getElementById('notifyBtn');
