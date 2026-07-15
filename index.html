@@ -153,6 +153,28 @@
   .admin-input:focus{border-color:#2f6bff;background:#fff;}
   .admin-msg{margin-top:9px;font-size:12.5px;color:#d94a52;font-weight:600;min-height:16px;}
   .admin-panel-note{font-size:13px;color:#8a909c;font-weight:500;margin-bottom:14px;}
+  /* 구독 추가/편집 폼 */
+  .form-row{margin-bottom:12px;}
+  .form-row > label{display:block;font-size:11.5px;font-weight:700;color:#8a909c;margin-bottom:5px;}
+  .form-row input[type=text],.form-row input[type=date],.form-row select,.form-row textarea{
+    width:100%;padding:11px 13px;border-radius:11px;border:1.5px solid #e3e6ec;background:#f7f8fb;
+    font-family:inherit;font-size:14px;font-weight:600;color:#1b1d24;outline:none;
+  }
+  .form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:#2f6bff;background:#fff;}
+  .form-row textarea{min-height:78px;resize:vertical;line-height:1.5;}
+  .form-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .form-hint{font-size:11px;color:#a2a8b4;margin-top:5px;}
+  .chk-row{display:flex;align-items:center;gap:8px;}
+  .chk-row label{font-size:13px;font-weight:600;color:#1b1d24;margin:0;}
+  .logo-prev{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#fff;border:1px solid #eceef3;flex:0 0 auto;}
+  .sub-manage{margin-top:14px;}
+  .sub-manage h4{font-size:11.5px;font-weight:700;color:#8a909c;margin-bottom:7px;}
+  .sm-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:11px;background:#f7f8fb;margin-bottom:6px;font-size:13px;font-weight:700;color:#1b1d24;}
+  .sm-item img{width:26px;height:26px;border-radius:50%;object-fit:cover;background:#fff;}
+  .sm-item .sm-btn{border:none;background:none;cursor:pointer;font-weight:700;font-size:11.5px;padding:4px 6px;border-radius:6px;}
+  .sm-item .sm-edit{color:#2f6bff;margin-left:auto;}
+  .sm-item .sm-del{color:#d94a52;}
+
   .admin-logout{
     display:block;width:100%;margin-top:10px;padding:12px;
     border:none;border-radius:13px;background:#f0f2f6;color:#8a909c;
@@ -474,8 +496,49 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
           <span id="notifyLabel">구독 갱신 알림 받기</span>
         </button>
+        <a class="modal-link" style="background:#2f6bff;color:#fff;margin-top:10px" href="javascript:void(0)" onclick="openSubForm()">+ 구독 추가</a>
+        <div class="sub-manage" id="subManage"></div>
         <button class="admin-logout" type="button" onclick="doAdminLogout()">로그아웃</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- 구독 추가/편집 폼 (관리자) -->
+<div class="modal-overlay" id="subFormModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="구독 추가" style="max-width:440px">
+    <div class="modal-head">
+      <div>
+        <div class="mh-title" id="sfTitle">구독 추가</div>
+        <div class="mh-sub">관리자 전용</div>
+      </div>
+      <button class="mh-close" type="button" onclick="closeModal('subFormModal')" aria-label="닫기">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-2">
+        <div class="form-row"><label>이름</label><input type="text" id="sfName" placeholder="예: Freepik"></div>
+        <div class="form-row"><label>플랜</label><input type="text" id="sfPlan" placeholder="예: Premium"></div>
+      </div>
+      <div class="form-2">
+        <div class="form-row"><label>위치</label><select id="sfCard"><option value="after">변경</option><option value="before">기존</option></select></div>
+        <div class="form-row"><label>구독 주기</label><select id="sfCycle"><option value="year">연구독</option><option value="month">월구독</option></select></div>
+      </div>
+      <div class="form-row"><label>갱신일</label><input type="date" id="sfAnchor"></div>
+      <div class="form-row"><label>홈페이지 링크</label><input type="text" id="sfLink" placeholder="https://..."></div>
+      <div class="form-row">
+        <label>로고</label>
+        <div style="display:flex;align-items:center;gap:10px">
+          <img class="logo-prev" id="sfLogoPrev" alt="">
+          <input type="text" id="sfLogo" placeholder="이미지 주소 붙여넣기" style="flex:1" oninput="sfPreview()">
+        </div>
+        <div class="form-hint">또는 파일 선택 : <input type="file" id="sfFile" accept="image/*" onchange="sfUpload()" style="font-size:11px"></div>
+      </div>
+      <div class="form-row"><label>주요 기능 (한 줄에 하나씩)</label><textarea id="sfFeat" placeholder="이미지 생성&#10;동영상 편집&#10;템플릿 제공"></textarea></div>
+      <div class="form-row chk-row"><input type="checkbox" id="sfHl"><label for="sfHl">분홍색으로 강조 (신규 표시)</label></div>
+      <div class="admin-msg" id="sfMsg"></div>
+    </div>
+    <div class="modal-foot">
+      <a class="modal-link" style="background:#2f6bff;color:#fff" href="javascript:void(0)" onclick="saveSub()">저장</a>
     </div>
   </div>
 </div>
@@ -847,8 +910,182 @@ async function toggleRenew(key, cb){
     });
   }catch(e){ console.error(e); }
 }
+/* ===== 관리자가 추가한 구독 (Supabase subs 테이블) ===== */
+let DYN = [];
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function loadDynSubs(){
+  try{
+    const res = await fetch(SUPA_URL+'/rest/v1/subs?select=*&order=created_at.asc',{headers:{apikey:SUPA_ANON}});
+    if(!res.ok) return;
+    DYN = await res.json();
+  }catch(_){ DYN = []; }
+  renderDynSubs();
+}
+
+function renderDynSubs(){
+  document.querySelectorAll('[data-dyn]').forEach(e=>e.remove());
+  DYN.forEach(s=>{
+    const id = 'd'+String(s.id).replace(/-/g,'').slice(0,12);
+    SUBS[id] = { cycle:s.cycle||'year', anchor:s.anchor||'2030-01-01', autorenew:true, dyn:true };
+    const isBefore = s.card === 'before';
+    const card = document.querySelector(isBefore ? '.card.before' : '.card.after');
+    if(!card) return;
+
+    // 행
+    const row = document.createElement('div');
+    row.className = 'row ' + (s.highlight ? 'new' : 'linkrow');
+    row.setAttribute('data-dyn', id);
+    row.setAttribute('role','button');
+    row.setAttribute('tabindex','0');
+    row.onclick = ()=>openModal('m-'+id);
+    row.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();row.click();} });
+    row.innerHTML =
+      '<span class="ico">'+(s.logo?'<img src="'+esc(s.logo)+'" alt="">':'')+'</span>'+
+      '<span class="name">'+esc(s.name)+'</span>'+
+      '<span class="plan">'+esc(s.plan||'')+' <span class="chev">›</span></span>'+
+      (isBefore ? '<span class="date"></span>' : '');
+    card.appendChild(row);
+
+    // 팝업
+    const feats = String(s.features||'').split('\n').map(t=>t.trim()).filter(Boolean);
+    const ov = document.createElement('div');
+    ov.className = 'modal-overlay';
+    ov.id = 'm-'+id;
+    ov.setAttribute('data-dyn', id);
+    ov.setAttribute('aria-hidden','true');
+    ov.innerHTML =
+      '<div class="modal" role="dialog" aria-modal="true">'+
+        '<div class="modal-head"><div>'+
+          '<div class="mh-title">'+esc(s.name)+(s.plan?' · '+esc(s.plan):'')+'</div>'+
+          '<div class="mh-sub">구독 정보</div>'+
+        '</div><button class="mh-close" type="button" onclick="closeModal(\'m-'+id+'\')" aria-label="닫기">×</button></div>'+
+        '<div class="modal-body">'+
+          (feats.length
+            ? '<div class="mb-sec"><span class="dot"></span>주요 기능</div><div class="hf-chips">'+feats.map(f=>'<span>'+esc(f)+'</span>').join('')+'</div>'
+            : '<p class="hf-cap">등록된 기능 설명이 없습니다.</p>')+
+        '</div>'+
+        '<div class="modal-foot">'+
+          '<div class="renew-line"><span class="renew-date" data-sub="'+id+'"></span>'+
+            '<label class="renew-toggle" data-sub="'+id+'"><span class="rt-label">계속 갱신</span>'+
+            '<input type="checkbox" onchange="toggleRenew(\''+id+'\',this)"><span class="rt-track"></span></label>'+
+          '</div>'+
+          (s.link ? '<a class="modal-link" style="background:#0a0d13;color:#fff" href="'+esc(s.link)+'" target="_blank" rel="noopener">'+esc(s.name)+' 바로가기 ↗</a>' : '')+
+        '</div>'+
+      '</div>';
+    ov.addEventListener('click',e=>{ if(e.target===ov) closeModal(ov.id); });
+    document.body.appendChild(ov);
+    renderSub(id);
+  });
+  // 진입 애니메이션 지연 재계산
+  document.querySelectorAll('.card').forEach(card=>{
+    const base = card.classList.contains('after') ? 0.42 : 0.32;
+    card.querySelectorAll('.row').forEach((r,i)=>{ r.style.animationDelay = (base + i*0.13).toFixed(2)+'s'; });
+  });
+  renderSubManage();
+}
+
+/* 관리자 패널의 구독 관리 목록 */
+function renderSubManage(){
+  const box = document.getElementById('subManage');
+  if(!box) return;
+  if(!DYN.length){ box.innerHTML = ''; return; }
+  box.innerHTML = '<h4>추가한 구독</h4>' + DYN.map(s=>
+    '<div class="sm-item">'+
+      (s.logo?'<img src="'+esc(s.logo)+'" alt="">':'')+
+      '<span>'+esc(s.name)+'</span>'+
+      '<button class="sm-btn sm-edit" onclick="openSubForm(\''+s.id+'\')">편집</button>'+
+      '<button class="sm-btn sm-del" onclick="deleteSub(\''+s.id+'\')">삭제</button>'+
+    '</div>').join('');
+}
+
+/* 폼 열기 (id 없으면 추가) */
+function openSubForm(id){
+  const s = id ? DYN.find(x=>String(x.id)===String(id)) : null;
+  document.getElementById('sfTitle').textContent = s ? '구독 편집' : '구독 추가';
+  document.getElementById('sfName').value   = s?.name || '';
+  document.getElementById('sfPlan').value   = s?.plan || '';
+  document.getElementById('sfCard').value   = s?.card || 'after';
+  document.getElementById('sfCycle').value  = s?.cycle || 'year';
+  document.getElementById('sfAnchor').value = s?.anchor || '';
+  document.getElementById('sfLink').value   = s?.link || '';
+  document.getElementById('sfLogo').value   = s?.logo || '';
+  document.getElementById('sfFeat').value   = s?.features || '';
+  document.getElementById('sfHl').checked   = !!s?.highlight;
+  document.getElementById('sfMsg').textContent = '';
+  document.getElementById('subFormModal').dataset.editId = s ? s.id : '';
+  sfPreview();
+  openModal('subFormModal');
+}
+function sfPreview(){
+  const v = document.getElementById('sfLogo').value.trim();
+  const img = document.getElementById('sfLogoPrev');
+  img.style.visibility = v ? 'visible' : 'hidden';
+  if(v) img.src = v;
+}
+/* 로고 파일 업로드 (Supabase Storage) */
+async function sfUpload(){
+  const f = document.getElementById('sfFile').files[0];
+  if(!f) return;
+  const msg = document.getElementById('sfMsg');
+  msg.style.color = '#8a909c'; msg.textContent = '업로드 중…';
+  const path = Date.now() + '-' + f.name.replace(/[^a-zA-Z0-9._-]/g,'');
+  try{
+    const res = await fetch(SUPA_URL+'/storage/v1/object/sub-logos/'+encodeURIComponent(path),{
+      method:'POST',
+      headers:{ apikey:SUPA_ANON, 'Content-Type': f.type || 'application/octet-stream' },
+      body: f
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    document.getElementById('sfLogo').value = SUPA_URL+'/storage/v1/object/public/sub-logos/'+encodeURIComponent(path);
+    sfPreview();
+    msg.style.color = '#1f9d55'; msg.textContent = '업로드 완료';
+  }catch(e){ msg.style.color = '#d94a52'; msg.textContent = '업로드 실패: '+e.message; }
+}
+/* 저장 */
+async function saveSub(){
+  const msg = document.getElementById('sfMsg');
+  const name = document.getElementById('sfName').value.trim();
+  if(!name){ msg.style.color='#d94a52'; msg.textContent='이름을 입력하세요'; return; }
+  const editId = document.getElementById('subFormModal').dataset.editId;
+  const body = {
+    name,
+    plan:     document.getElementById('sfPlan').value.trim(),
+    card:     document.getElementById('sfCard').value,
+    cycle:    document.getElementById('sfCycle').value,
+    anchor:   document.getElementById('sfAnchor').value || null,
+    link:     document.getElementById('sfLink').value.trim(),
+    logo:     document.getElementById('sfLogo').value.trim(),
+    features: document.getElementById('sfFeat').value,
+    highlight:document.getElementById('sfHl').checked
+  };
+  msg.style.color='#8a909c'; msg.textContent='저장 중…';
+  try{
+    const url = editId ? SUPA_URL+'/rest/v1/subs?id=eq.'+editId : SUPA_URL+'/rest/v1/subs';
+    const res = await fetch(url,{
+      method: editId ? 'PATCH' : 'POST',
+      headers:{ apikey:SUPA_ANON, 'Content-Type':'application/json' },
+      body: JSON.stringify(body)
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    closeModal('subFormModal');
+    await loadDynSubs();
+    await loadSubMeta();
+  }catch(e){ msg.style.color='#d94a52'; msg.textContent='저장 실패: '+e.message; }
+}
+/* 삭제 */
+async function deleteSub(id){
+  if(!confirm('이 구독을 삭제할까요?')) return;
+  try{
+    await fetch(SUPA_URL+'/rest/v1/subs?id=eq.'+id,{ method:'DELETE', headers:{ apikey:SUPA_ANON } });
+    await loadDynSubs();
+    await loadSubMeta();
+  }catch(e){ alert('삭제 실패: '+e.message); }
+}
+
+/* 초기화: 추가 구독 먼저 → 토글 상태 적용 */
 Object.keys(SUBS).forEach(renderSub);
-loadSubMeta();
+(async ()=>{ await loadDynSubs(); await loadSubMeta(); })();
 
 /* ===== 관리자 로그인 (비번 7989, 새로고침해도 유지) ===== */
 const ADMIN_PW = "7989";
