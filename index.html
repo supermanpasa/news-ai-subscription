@@ -444,14 +444,20 @@
   .notify-btn{background:var(--card2);color:var(--ink);box-shadow:0 8px 20px -14px rgba(0,0,0,.6);}
   .notify-btn.on{background:rgba(31,157,85,.2);color:#4ade80;}
   .notify-btn.on svg{color:#4ade80;}
-  .modal-overlay{background:rgba(0,0,0,.6);}
-  .modal{background:var(--card);border:1px solid var(--line);box-shadow:0 34px 90px -22px rgba(0,0,0,.75);}
-  .modal-head{background:linear-gradient(135deg,#242426,#1d1d1f);}
-  .mh-title{color:var(--ink);}
+  .modal-overlay{background:rgba(4,6,12,.6);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);}
+  .modal{
+    background:rgba(18,22,36,.8);
+    border:1px solid var(--glass-brd);
+    -webkit-backdrop-filter:blur(40px) saturate(1.35);
+    backdrop-filter:blur(40px) saturate(1.35);
+    box-shadow:0 44px 120px -34px rgba(0,0,0,.88), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .modal-head{background:linear-gradient(135deg,rgba(70,95,165,.20),rgba(30,36,58,.08));border-bottom:1px solid rgba(255,255,255,.05);}
+  .mh-title{color:var(--ink);font-weight:700;letter-spacing:-.01em;}
   .mh-sub{color:var(--sub);}
   .mh-close{background:rgba(255,255,255,.08);color:#cfcfd4;}
   .mh-close:hover{background:rgba(255,255,255,.16);}
-  .modal-foot{background:var(--card);border-top-color:var(--line);}
+  .modal-foot{background:rgba(255,255,255,.02);border-top-color:rgba(255,255,255,.06);}
   .mb-sec{color:var(--ink);}
   .mb-sec .dot{background:var(--blue);}
   .hf-cap{color:var(--sub);}
@@ -475,21 +481,23 @@
   .renew-date{color:var(--sub);}
 
   /* ===== 카드 주변 유기적 파란 글로우 (살아있는 느낌) ===== */
-  .bg-orbs{position:fixed;top:50%;left:50%;width:min(780px,98vw);height:min(900px,150vh);transform:translate(-50%,-50%);z-index:0;pointer-events:none;}
-  .bg-orbs span{position:absolute;border-radius:50%;filter:blur(64px);will-change:transform,opacity;}
-  .bg-orbs span:nth-child(1){width:360px;height:360px;left:-17%;top:-3%;background:radial-gradient(circle,rgba(47,119,246,.9),rgba(47,119,246,0) 68%);animation:orbA 22s ease-in-out infinite;}
-  .bg-orbs span:nth-child(2){width:340px;height:340px;right:-15%;top:12%;background:radial-gradient(circle,rgba(56,189,248,.85),rgba(56,189,248,0) 68%);animation:orbB 27s ease-in-out infinite;}
-  .bg-orbs span:nth-child(3){width:390px;height:390px;left:-12%;bottom:-6%;background:radial-gradient(circle,rgba(74,148,255,.88),rgba(74,148,255,0) 68%);animation:orbC 20s ease-in-out infinite;}
-  .bg-orbs span:nth-child(4){width:320px;height:320px;right:-11%;bottom:3%;background:radial-gradient(circle,rgba(109,94,255,.75),rgba(109,94,255,0) 68%);animation:orbD 25s ease-in-out infinite;}
-  @keyframes orbA{0%,100%{transform:translate(0,0) scale(1);opacity:.6}33%{transform:translate(46px,34px) scale(1.14);opacity:.85}66%{transform:translate(22px,58px) scale(.95);opacity:.62}}
-  @keyframes orbB{0%,100%{transform:translate(0,0) scale(1);opacity:.55}40%{transform:translate(-42px,38px) scale(1.16);opacity:.82}70%{transform:translate(-20px,-26px) scale(.9);opacity:.58}}
-  @keyframes orbC{0%,100%{transform:translate(0,0) scale(1);opacity:.6}30%{transform:translate(38px,-40px) scale(1.1);opacity:.85}60%{transform:translate(60px,-18px) scale(.95);opacity:.64}}
-  @keyframes orbD{0%,100%{transform:translate(0,0) scale(1);opacity:.5}50%{transform:translate(-38px,-30px) scale(1.2);opacity:.72}}
+  .bg-orbs{position:fixed;top:50%;left:50%;width:min(820px,98vw);height:min(940px,150vh);transform:translate(-50%,-50%);z-index:0;pointer-events:none;}
+  .bg-orbs span{position:absolute;border-radius:50%;filter:blur(60px);will-change:transform,opacity;}
+  .bg-orbs span:nth-child(1){width:240px;height:240px;left:-14%;top:-2%;background:radial-gradient(circle,rgba(47,119,246,.92),rgba(47,119,246,0) 68%);animation:orbA 17s ease-in-out infinite;}
+  .bg-orbs span:nth-child(2){width:470px;height:470px;right:-20%;top:6%;background:radial-gradient(circle,rgba(56,189,248,.82),rgba(56,189,248,0) 68%);animation:orbB 25s ease-in-out infinite;}
+  .bg-orbs span:nth-child(3){width:300px;height:300px;left:-10%;bottom:0%;background:radial-gradient(circle,rgba(74,148,255,.9),rgba(74,148,255,0) 68%);animation:orbC 19s ease-in-out infinite;}
+  .bg-orbs span:nth-child(4){width:560px;height:560px;right:-18%;bottom:-14%;background:radial-gradient(circle,rgba(109,94,255,.72),rgba(109,94,255,0) 68%);animation:orbD 30s ease-in-out infinite;}
+  .bg-orbs span:nth-child(5){width:180px;height:180px;left:28%;top:-9%;background:radial-gradient(circle,rgba(94,201,255,.9),rgba(94,201,255,0) 68%);animation:orbE 14s ease-in-out infinite;}
+  @keyframes orbA{0%,100%{transform:translate(0,0) scale(1);opacity:.6}30%{transform:translate(80px,54px) scale(1.22);opacity:.9}62%{transform:translate(38px,96px) scale(.9);opacity:.6}}
+  @keyframes orbB{0%,100%{transform:translate(0,0) scale(1);opacity:.5}38%{transform:translate(-88px,66px) scale(1.18);opacity:.8}72%{transform:translate(-36px,-52px) scale(.86);opacity:.55}}
+  @keyframes orbC{0%,100%{transform:translate(0,0) scale(1);opacity:.62}34%{transform:translate(70px,-72px) scale(1.24);opacity:.9}64%{transform:translate(108px,-30px) scale(.92);opacity:.64}}
+  @keyframes orbD{0%,100%{transform:translate(0,0) scale(1);opacity:.48}46%{transform:translate(-70px,-58px) scale(1.15);opacity:.72}}
+  @keyframes orbE{0%,100%{transform:translate(0,0) scale(1);opacity:.5}50%{transform:translate(64px,90px) scale(1.35);opacity:.85}}
   @media (prefers-reduced-motion:reduce){ .bg-orbs span{animation:none;} }
 </style>
 </head>
 <body>
-<div class="bg-orbs"><span></span><span></span><span></span><span></span></div>
+<div class="bg-orbs"><span></span><span></span><span></span><span></span><span></span></div>
 <div class="wrap">
 
   <div class="head">
@@ -1032,7 +1040,7 @@ function bindTilt(){
     const y = (e.clientY - r.top) / r.height;
     card.style.setProperty('--mx', (x*100).toFixed(1)+'%');
     card.style.setProperty('--my', (y*100).toFixed(1)+'%');
-    card.style.transform = 'perspective(1300px) rotateX(' + (-(y-0.5)*3.2).toFixed(2) + 'deg) rotateY(' + ((x-0.5)*4.4).toFixed(2) + 'deg)';
+    card.style.transform = 'perspective(1150px) rotateX(' + (-(y-0.5)*5.4).toFixed(2) + 'deg) rotateY(' + ((x-0.5)*7).toFixed(2) + 'deg)';
   });
   card.addEventListener('mouseleave', ()=>{ card.style.transform = ''; });
 }
