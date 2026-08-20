@@ -383,7 +383,20 @@
     -webkit-backdrop-filter:blur(34px) saturate(1.35);
     backdrop-filter:blur(34px) saturate(1.35);
     box-shadow:0 34px 90px -34px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.07);
+    position:relative;
+    transition:transform .16s ease, box-shadow .3s ease;
   }
+  /* 마우스 따라오는 반사 스트로크(외곽 테두리) */
+  .card::before{
+    content:'';position:absolute;inset:0;border-radius:inherit;padding:1.4px;
+    background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),
+      rgba(175,205,255,.95), rgba(120,155,255,.28) 42%, rgba(255,255,255,.04) 70%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    pointer-events:none;opacity:0;transition:opacity .3s ease;z-index:2;
+  }
+  .card:hover::before{opacity:1;}
+  .card:hover{box-shadow:0 40px 110px -34px rgba(20,50,160,.55), inset 0 1px 0 rgba(255,255,255,.09);}
   /* 각 행 = 유리 타일 */
   .row{
     border:1px solid rgba(255,255,255,.055);
@@ -400,9 +413,10 @@
     opacity:0;transition:opacity .35s ease;
   }
   .row:hover{
+    transform:none;
     background:rgba(120,160,255,.07);
-    border-color:rgba(120,165,255,.42);
-    box-shadow:0 14px 34px -14px rgba(40,90,220,.5), inset 0 1px 0 rgba(255,255,255,.10);
+    border-color:rgba(120,165,255,.34);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
   }
   .row:hover::after{opacity:1;animation:tileSheen 1.05s ease forwards;}
   @keyframes tileSheen{from{background-position:130% 0;}to{background-position:-50% 0;}}
@@ -460,17 +474,17 @@
   .rt-track{background:#3a3a3d;}
   .renew-date{color:var(--sub);}
 
-  /* ===== 배경 유기적 파란 글로우 (살아있는 느낌) ===== */
-  .bg-orbs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
-  .bg-orbs span{position:absolute;border-radius:50%;filter:blur(70px);will-change:transform;}
-  .bg-orbs span:nth-child(1){width:640px;height:640px;left:-12%;top:-6%;background:radial-gradient(circle,rgba(47,119,246,.85),rgba(47,119,246,0) 68%);animation:orbA 24s ease-in-out infinite;}
-  .bg-orbs span:nth-child(2){width:540px;height:540px;right:-10%;top:22%;background:radial-gradient(circle,rgba(56,189,248,.8),rgba(56,189,248,0) 68%);animation:orbB 30s ease-in-out infinite;}
-  .bg-orbs span:nth-child(3){width:600px;height:600px;left:8%;bottom:-14%;background:radial-gradient(circle,rgba(74,148,255,.82),rgba(74,148,255,0) 68%);animation:orbC 21s ease-in-out infinite;}
-  .bg-orbs span:nth-child(4){width:480px;height:480px;right:16%;bottom:6%;background:radial-gradient(circle,rgba(109,94,255,.7),rgba(109,94,255,0) 68%);animation:orbD 27s ease-in-out infinite;}
-  @keyframes orbA{0%,100%{transform:translate(0,0) scale(1);opacity:.55}33%{transform:translate(120px,80px) scale(1.14);opacity:.8}66%{transform:translate(60px,140px) scale(.94);opacity:.6}}
-  @keyframes orbB{0%,100%{transform:translate(0,0) scale(1);opacity:.5}40%{transform:translate(-110px,90px) scale(1.16);opacity:.78}70%{transform:translate(-50px,-60px) scale(.9);opacity:.55}}
-  @keyframes orbC{0%,100%{transform:translate(0,0) scale(1);opacity:.55}30%{transform:translate(90px,-100px) scale(1.1);opacity:.8}60%{transform:translate(150px,-40px) scale(.95);opacity:.6}}
-  @keyframes orbD{0%,100%{transform:translate(0,0) scale(1);opacity:.45}50%{transform:translate(-90px,-70px) scale(1.2);opacity:.68}}
+  /* ===== 카드 주변 유기적 파란 글로우 (살아있는 느낌) ===== */
+  .bg-orbs{position:fixed;top:50%;left:50%;width:min(780px,98vw);height:min(900px,150vh);transform:translate(-50%,-50%);z-index:0;pointer-events:none;}
+  .bg-orbs span{position:absolute;border-radius:50%;filter:blur(64px);will-change:transform,opacity;}
+  .bg-orbs span:nth-child(1){width:360px;height:360px;left:-17%;top:-3%;background:radial-gradient(circle,rgba(47,119,246,.9),rgba(47,119,246,0) 68%);animation:orbA 22s ease-in-out infinite;}
+  .bg-orbs span:nth-child(2){width:340px;height:340px;right:-15%;top:12%;background:radial-gradient(circle,rgba(56,189,248,.85),rgba(56,189,248,0) 68%);animation:orbB 27s ease-in-out infinite;}
+  .bg-orbs span:nth-child(3){width:390px;height:390px;left:-12%;bottom:-6%;background:radial-gradient(circle,rgba(74,148,255,.88),rgba(74,148,255,0) 68%);animation:orbC 20s ease-in-out infinite;}
+  .bg-orbs span:nth-child(4){width:320px;height:320px;right:-11%;bottom:3%;background:radial-gradient(circle,rgba(109,94,255,.75),rgba(109,94,255,0) 68%);animation:orbD 25s ease-in-out infinite;}
+  @keyframes orbA{0%,100%{transform:translate(0,0) scale(1);opacity:.6}33%{transform:translate(46px,34px) scale(1.14);opacity:.85}66%{transform:translate(22px,58px) scale(.95);opacity:.62}}
+  @keyframes orbB{0%,100%{transform:translate(0,0) scale(1);opacity:.55}40%{transform:translate(-42px,38px) scale(1.16);opacity:.82}70%{transform:translate(-20px,-26px) scale(.9);opacity:.58}}
+  @keyframes orbC{0%,100%{transform:translate(0,0) scale(1);opacity:.6}30%{transform:translate(38px,-40px) scale(1.1);opacity:.85}60%{transform:translate(60px,-18px) scale(.95);opacity:.64}}
+  @keyframes orbD{0%,100%{transform:translate(0,0) scale(1);opacity:.5}50%{transform:translate(-38px,-30px) scale(1.2);opacity:.72}}
   @media (prefers-reduced-motion:reduce){ .bg-orbs span{animation:none;} }
 </style>
 </head>
@@ -479,7 +493,6 @@
 <div class="wrap">
 
   <div class="head">
-    <span class="kicker">§ AI SUBSCRIPTIONS</span>
     <h1>뉴스디자인 AI툴 구독 현황 <span class="admin-dot" title="관리자 모드"></span></h1>
     <div class="mail">newsdesign1991@gmail.com</div>
   </div>
@@ -488,7 +501,6 @@
 
     <!-- 현재 구독 -->
     <section class="card after">
-      <h2>현재 구독</h2>
       <div class="row linkrow" onclick="openModal('gptModal')" role="button" tabindex="0" aria-label="ChatGPT 주요 기능 보기">
         <span class="ico" data-logo="gpt"></span>
         <span class="name">Chat GPT</span>
@@ -1010,18 +1022,19 @@ document.querySelectorAll('.row.new,.row.linkrow').forEach(row=>{
   });
 });
 
-/* 호버 시 유기적 틸트/리프트 (타일이 살아있는 느낌) */
+/* 전체 카드 틸트 + 마우스 따라오는 반사 스트로크 (유기적 재질감) */
 function bindTilt(){
-  document.querySelectorAll('.card .row').forEach(row=>{
-    if(row._tilt) return; row._tilt = true;
-    row.addEventListener('mousemove', e=>{
-      const r = row.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width - 0.5;
-      const py = (e.clientY - r.top) / r.height - 0.5;
-      row.style.transform = 'perspective(680px) rotateX(' + (-py*4.5).toFixed(2) + 'deg) rotateY(' + (px*7).toFixed(2) + 'deg) translateY(-3px)';
-    });
-    row.addEventListener('mouseleave', ()=>{ row.style.transform = ''; });
+  const card = document.querySelector('.card');
+  if(!card || card._tilt) return; card._tilt = true;
+  card.addEventListener('mousemove', e=>{
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    card.style.setProperty('--mx', (x*100).toFixed(1)+'%');
+    card.style.setProperty('--my', (y*100).toFixed(1)+'%');
+    card.style.transform = 'perspective(1300px) rotateX(' + (-(y-0.5)*3.2).toFixed(2) + 'deg) rotateY(' + ((x-0.5)*4.4).toFixed(2) + 'deg)';
   });
+  card.addEventListener('mouseleave', ()=>{ card.style.transform = ''; });
 }
 bindTilt();
 
