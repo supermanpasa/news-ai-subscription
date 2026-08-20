@@ -403,6 +403,21 @@
         <span class="name">Mesh AI</span>
         <span class="plan">Premium <span class="chev">›</span></span>
       </div>
+      <div class="row linkrow" onclick="openModal('gaModal')" role="button" tabindex="0" aria-label="Google AI 주요 기능 보기">
+        <span class="ico" data-logo="google"></span>
+        <span class="name">Google AI</span>
+        <span class="plan">Pro <span class="chev">›</span></span>
+      </div>
+      <div class="row linkrow" onclick="openModal('mjModal')" role="button" tabindex="0" aria-label="Midjourney 주요 기능 보기">
+        <span class="ico" data-logo="midjourney"></span>
+        <span class="name">Midjourney</span>
+        <span class="plan">Pro <span class="chev">›</span></span>
+      </div>
+      <div class="row linkrow" onclick="openModal('sdModal')" role="button" tabindex="0" aria-label="Seedance 주요 기능 보기">
+        <span class="ico" data-logo="seedance"></span>
+        <span class="name">Seedance</span>
+        <span class="plan">표준 <span class="chev">›</span></span>
+      </div>
     </section>
 
   </div>
@@ -482,6 +497,99 @@
     </div>
     <div class="modal-foot">
       <a class="modal-link" style="background:#2f6bff;color:#fff" href="javascript:void(0)" onclick="saveSub()">저장</a>
+    </div>
+  </div>
+</div>
+
+<!-- Google AI Pro 팝업 -->
+<div class="modal-overlay" id="gaModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Google AI Pro 주요 기능">
+    <div class="modal-head">
+      <div>
+        <div class="mh-title">Google AI · Pro</div>
+        <div class="mh-sub">Gemini 기반 구글의 올인원 AI</div>
+      </div>
+      <button class="mh-close" type="button" onclick="closeModal('gaModal')" aria-label="닫기">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="hf-cap">Gemini Pro로 글·이미지·영상·자료를 다룰 수 있어요.</p>
+      <div class="mb-sec"><span class="dot"></span>주요 기능</div>
+      <div class="hf-chips">
+        <span>Gemini 2.5 Pro 모델</span>
+        <span>텍스트·코드 생성</span>
+        <span>이미지 생성 (Imagen)</span>
+        <span>영상 생성 (Veo)</span>
+        <span>딥 리서치</span>
+        <span>NotebookLM 확장</span>
+        <span>2TB 저장공간</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div class="renew-line"><span class="renew-date" data-sub="googleai"></span><label class="renew-toggle" data-sub="googleai"><span class="rt-label">계속 갱신</span><input type="checkbox" onchange="toggleRenew('googleai',this)"><span class="rt-track"></span></label></div>
+      <a class="modal-link" style="background:#0a0d13;color:#fff" href="https://gemini.google.com" target="_blank" rel="noopener">
+        <img src="Logos/GoogleAI.png" alt="">Google AI 바로가기 ↗
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Midjourney Pro 팝업 -->
+<div class="modal-overlay" id="mjModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Midjourney Pro 주요 기능">
+    <div class="modal-head">
+      <div>
+        <div class="mh-title">Midjourney · Pro</div>
+        <div class="mh-sub">고품질 AI 이미지 생성</div>
+      </div>
+      <button class="mh-close" type="button" onclick="closeModal('mjModal')" aria-label="닫기">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="hf-cap">감각적인 스타일의 이미지를 만드는 대표 AI.</p>
+      <div class="mb-sec"><span class="dot"></span>주요 기능</div>
+      <div class="hf-chips">
+        <span>고품질 이미지 생성</span>
+        <span>빠른 생성 15시간/월</span>
+        <span>무제한 릴랙스 생성</span>
+        <span>스텔스 모드 (비공개)</span>
+        <span>업스케일·베리에이션</span>
+        <span>스타일·구도 자유도 높음</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div class="renew-line"><span class="renew-date" data-sub="midjourney"></span><label class="renew-toggle" data-sub="midjourney"><span class="rt-label">계속 갱신</span><input type="checkbox" onchange="toggleRenew('midjourney',this)"><span class="rt-track"></span></label></div>
+      <a class="modal-link" style="background:#0a0d13;color:#fff" href="https://www.midjourney.com" target="_blank" rel="noopener">
+        <img src="Logos/Midjourney.png" alt="">Midjourney 바로가기 ↗
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Seedance 표준 팝업 -->
+<div class="modal-overlay" id="sdModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Seedance 표준 주요 기능">
+    <div class="modal-head">
+      <div>
+        <div class="mh-title">Seedance · 표준</div>
+        <div class="mh-sub">Dreamina(CapCut)의 이미지·영상 AI</div>
+      </div>
+      <button class="mh-close" type="button" onclick="closeModal('sdModal')" aria-label="닫기">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="hf-cap">텍스트·이미지로 영상을 만드는 AI 생성 도구.</p>
+      <div class="mb-sec"><span class="dot"></span>주요 기능</div>
+      <div class="hf-chips">
+        <span>텍스트 → 영상 생성</span>
+        <span>이미지 → 영상 생성</span>
+        <span>AI 이미지 생성</span>
+        <span>다양한 영상 스타일</span>
+        <span>고해상도 출력</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div class="renew-line"><span class="renew-date" data-sub="seedance"></span><label class="renew-toggle" data-sub="seedance"><span class="rt-label">계속 갱신</span><input type="checkbox" onchange="toggleRenew('seedance',this)"><span class="rt-track"></span></label></div>
+      <a class="modal-link" style="background:#0a0d13;color:#fff" href="https://dreamina.capcut.com/" target="_blank" rel="noopener">
+        <img src="Logos/Seedance.png" alt="">Seedance 바로가기 ↗
+      </a>
     </div>
   </div>
 </div>
@@ -743,7 +851,8 @@ const LOGOS = {
   runway:"Logos/Runway.png",
   topaz:"Logos/Topaz.png",
   higgsfield:"Logos/Higgsfield.png",
-  tripo:"Logos/Tripo.png"
+  tripo:"Logos/Tripo.png",
+  seedance:"Logos/Seedance.png"
 };
 document.querySelectorAll('[data-logo]').forEach(el=>{
   const k=el.getAttribute('data-logo');
@@ -801,6 +910,9 @@ const SUBS = {
   topaz:     { cycle:'year',  anchor:'2027-02-13', autorenew:true },
   higgsfield:{ cycle:'year',  anchor:'2027-07-13', autorenew:true },  // 내년 오늘
   mesh:      { cycle:'year',  anchor:'2027-08-13', autorenew:true },
+  googleai:  { cycle:'year',  anchor:'2027-07-14', autorenew:true },  // 오늘부터 1년
+  midjourney:{ cycle:'year',  anchor:'2027-07-14', autorenew:true },
+  seedance:  { cycle:'year',  anchor:'2027-07-14', autorenew:true },
 };
 function nextRenew(cycle, anchor){
   const [y,m,d] = anchor.split('-').map(Number);
