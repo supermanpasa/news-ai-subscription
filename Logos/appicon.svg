@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="512" height="512">
+  <defs>
+    <linearGradient id="ndBadge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4a4a4a"/>
+      <stop offset=".55" stop-color="#151515"/>
+      <stop offset="1" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="ndGlyph" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#b8b8b8"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#ndBadge)"/>
+  <rect x="1.5" y="1.5" width="37" height="37" rx="10.5" fill="none" stroke="#ffffff" stroke-opacity=".16"/>
+  <path fill="url(#ndGlyph)" d="M20 8.6c1.06 0 1.92.86 1.92 1.92v.62a7 7 0 0 1 5.08 6.73v3.02l1.62 2.68a1.05 1.05 0 0 1-.9 1.6H12.28a1.05 1.05 0 0 1-.9-1.6l1.62-2.68V17.87a7 7 0 0 1 5.08-6.73v-.62c0-1.06.86-1.92 1.92-1.92z"/>
+  <path fill="url(#ndGlyph)" d="M16.85 28.4h6.3a3.16 3.16 0 0 1-6.3 0z"/>
+</svg>

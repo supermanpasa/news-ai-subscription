@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#eef1f6">
+<meta name="theme-color" content="#0f0f0f">
 <title>뉴스디자인 AI툴 구독 현황</title>
-<link rel="icon" type="image/png" href="Logos/pavicon.png">
-<link rel="apple-touch-icon" href="Logos/pavicon.png">
+<link rel="icon" type="image/svg+xml" href="Logos/appicon.svg">
+<link rel="icon" type="image/png" href="Logos/appicon.png">
+<link rel="apple-touch-icon" href="Logos/appicon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -15,16 +16,17 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css">
 <style>
   :root{
-    --bg:#eef1f6;
-    --card:#f7f8fb;
-    --ink:#1b1d24;
-    --sub:#8a909c;
-    --blue:#2f6bff;
+    --bg:#0f0f0f;
+    --card:#1b1b1d;
+    --card2:#272727;
+    --ink:#f1f1f1;
+    --sub:#9b9ba1;
+    --blue:#4a94ff;
     --red1:#e8646b;
     --red2:#d94a52;
-    --pink-bg:#fbe3f4;
-    --pink-ink:#e0509f;
-    --line:#eceef3;
+    --pink-bg:#3a2233;
+    --pink-ink:#e879b8;
+    --line:#303030;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   html,body{background:var(--bg);}
@@ -35,10 +37,10 @@
     line-height:1.4;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1120px;margin:0 auto;}
+  .wrap{max-width:600px;margin:0 auto;position:relative;z-index:1;}
 
   /* header */
-  .head{padding:0 8px;margin-bottom:26px;}
+  .head{padding:0 4px;margin-bottom:22px;}
   .head h1{font-size:30px;font-weight:800;letter-spacing:-.02em;}
   .head .mail{margin-top:8px;color:var(--sub);font-size:16px;font-weight:600;}
 
@@ -363,9 +365,69 @@
     .row .date .badge{font-size:13px;padding:7px 0;width:98px;}
     .col-head .lbl-date{font-size:13px;width:98px;}
   }
+
+  /* ===== 다크 표면 보정 ===== */
+  .card{background:var(--card);border:1px solid var(--line);box-shadow:0 18px 44px -22px rgba(0,0,0,.7);}
+  .row:hover{background:rgba(255,255,255,.055);box-shadow:0 10px 24px -14px rgba(0,0,0,.55);}
+  .col-head .lbl-date{color:var(--ink);}
+  .gear-btn{background:var(--card2);color:var(--sub);box-shadow:0 8px 22px -10px rgba(0,0,0,.6);}
+  .gear-btn:hover{color:var(--blue);}
+  body.admin .gear-btn{color:var(--blue);box-shadow:0 8px 22px -10px rgba(74,148,255,.4),0 0 0 2px rgba(74,148,255,.3);}
+  .admin-input,.form-row input[type=text],.form-row input[type=date],.form-row select,.form-row textarea{background:var(--card2);border-color:var(--line);color:var(--ink);}
+  .admin-input:focus,.form-row input:focus,.form-row select:focus,.form-row textarea:focus{background:#2f2f31;border-color:var(--blue);}
+  .admin-input::placeholder,.form-row input::placeholder,.form-row textarea::placeholder{color:#6b6b70;}
+  .admin-logout{background:var(--card2);color:var(--sub);}
+  .admin-logout:hover{background:#333;}
+  .sm-item{background:var(--card2);color:var(--ink);}
+  .logo-prev{border-color:var(--line);}
+  .notify-btn{background:var(--card2);color:var(--ink);box-shadow:0 8px 20px -14px rgba(0,0,0,.6);}
+  .notify-btn.on{background:rgba(31,157,85,.2);color:#4ade80;}
+  .notify-btn.on svg{color:#4ade80;}
+  .modal-overlay{background:rgba(0,0,0,.6);}
+  .modal{background:var(--card);border:1px solid var(--line);box-shadow:0 34px 90px -22px rgba(0,0,0,.75);}
+  .modal-head{background:linear-gradient(135deg,#242426,#1d1d1f);}
+  .mh-title{color:var(--ink);}
+  .mh-sub{color:var(--sub);}
+  .mh-close{background:rgba(255,255,255,.08);color:#cfcfd4;}
+  .mh-close:hover{background:rgba(255,255,255,.16);}
+  .modal-foot{background:var(--card);border-top-color:var(--line);}
+  .mb-sec{color:var(--ink);}
+  .mb-sec .dot{background:var(--blue);}
+  .hf-cap{color:var(--sub);}
+  .hf-chips span{background:rgba(74,148,255,.14);color:#8fbcff;}
+  .hf-note{background:var(--card2);color:var(--sub);}
+  .hf-table th{background:var(--card2);color:var(--sub);}
+  .hf-table td{border-bottom-color:var(--line);color:var(--ink);}
+  .hf-table td.model{color:var(--blue);}
+  .hf-table td.set{color:var(--sub);}
+  .hf-table th.cred,.hf-table td.cred{background:rgba(31,157,85,.16);}
+  .hf-table td.cred{color:#4ade80;}
+  .tp-item{background:var(--card2);}
+  .tp-item:hover{background:#2f2f31;}
+  .tp-txt .n{color:var(--ink);}
+  .tp-txt .d{color:var(--sub);}
+  .tp-dl,.modal-link{border:1px solid var(--line);}
+  .tp-dl{background:#2a2a2d;}
+  .tp-dl:hover{background:#343437;}
+  .modal-link img{background:#fff;}
+  .rt-track{background:#3a3a3d;}
+  .renew-date{color:var(--sub);}
+
+  /* ===== 배경 떠다니는 파란 블롭 (근무표 로그인 스타일) ===== */
+  .bg-orbs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+  .bg-orbs span{position:absolute;border-radius:50%;filter:blur(46px);opacity:.55;}
+  .bg-orbs span:nth-child(1){width:280px;height:280px;left:-4%;top:8%;background:radial-gradient(circle,rgba(47,119,246,.9),rgba(47,119,246,0) 70%);animation:orbFloat1 13s ease-in-out infinite,orbGlow 8s ease-in-out infinite;}
+  .bg-orbs span:nth-child(2){width:230px;height:230px;right:-2%;top:34%;background:radial-gradient(circle,rgba(56,189,248,.85),rgba(56,189,248,0) 70%);animation:orbFloat2 16s ease-in-out infinite,orbGlow 9s ease-in-out .5s infinite;}
+  .bg-orbs span:nth-child(3){width:260px;height:260px;left:18%;bottom:4%;background:radial-gradient(circle,rgba(74,148,255,.85),rgba(74,148,255,0) 70%);animation:orbFloat3 12s ease-in-out infinite,orbGlow 7s ease-in-out .9s infinite;}
+  @keyframes orbFloat1{0%,100%{transform:translate(0,0)}50%{transform:translate(90px,60px)}}
+  @keyframes orbFloat2{0%,100%{transform:translate(0,0)}50%{transform:translate(-70px,70px)}}
+  @keyframes orbFloat3{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,-80px)}}
+  @keyframes orbGlow{0%,100%{opacity:.4;filter:blur(50px)}50%{opacity:.7;filter:blur(36px)}}
+  @media (prefers-reduced-motion:reduce){ .bg-orbs span{animation:none;} }
 </style>
 </head>
 <body>
+<div class="bg-orbs"><span></span><span></span><span></span></div>
 <div class="wrap">
 
   <div class="head">
