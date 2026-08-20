@@ -12,6 +12,5 @@
   </defs>
   <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#ndBadge)"/>
   <rect x="1.5" y="1.5" width="37" height="37" rx="10.5" fill="none" stroke="#ffffff" stroke-opacity=".16"/>
-  <path fill="url(#ndGlyph)" d="M20 8.6c1.06 0 1.92.86 1.92 1.92v.62a7 7 0 0 1 5.08 6.73v3.02l1.62 2.68a1.05 1.05 0 0 1-.9 1.6H12.28a1.05 1.05 0 0 1-.9-1.6l1.62-2.68V17.87a7 7 0 0 1 5.08-6.73v-.62c0-1.06.86-1.92 1.92-1.92z"/>
-  <path fill="url(#ndGlyph)" d="M16.85 28.4h6.3a3.16 3.16 0 0 1-6.3 0z"/>
+  <text x="20" y="20.5" text-anchor="middle" dominant-baseline="central" font-family="Arial, 'Helvetica Neue', Helvetica, sans-serif" font-weight="800" font-size="16.5" letter-spacing="-0.5" fill="url(#ndGlyph)">AI</text>
 </svg>
