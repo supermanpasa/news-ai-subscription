@@ -436,6 +436,18 @@
   }
   .card{padding:24px;border-radius:28px;}
   .card .row:last-child{margin-bottom:0;}
+  /* 관리자 행 편집 버튼 */
+  .row-edit{
+    position:absolute;right:10px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border-radius:8px;border:1px solid var(--glass-brd);
+    background:rgba(255,255,255,.06);color:var(--sub);cursor:pointer;
+    display:none;align-items:center;justify-content:center;z-index:4;
+    transition:background .15s ease,color .15s ease;
+  }
+  .row-edit svg{width:14px;height:14px;}
+  .row-edit:hover{background:rgba(120,160,255,.22);color:#cfe0ff;}
+  body.admin .row-edit{display:flex;opacity:.55;}
+  body.admin .row:hover .row-edit{opacity:1;}
   .gear-btn{background:var(--card2);color:var(--sub);box-shadow:0 8px 22px -10px rgba(0,0,0,.6);}
   .gear-btn:hover{color:var(--blue);}
   body.admin .gear-btn{color:var(--blue);box-shadow:0 8px 22px -10px rgba(74,148,255,.4),0 0 0 2px rgba(74,148,255,.3);}
@@ -633,6 +645,34 @@
     </div>
     <div class="modal-foot">
       <a class="modal-link" style="background:#2f6bff;color:#fff" href="javascript:void(0)" onclick="saveSub()">저장</a>
+    </div>
+  </div>
+</div>
+
+<!-- 기존 구독 편집 폼 (관리자) -->
+<div class="modal-overlay" id="editModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="구독 편집" style="max-width:400px">
+    <div class="modal-head">
+      <div>
+        <div class="mh-title" id="edTitle">구독 편집</div>
+        <div class="mh-sub">관리자 전용</div>
+      </div>
+      <button class="mh-close" type="button" onclick="closeModal('editModal')" aria-label="닫기">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-2">
+        <div class="form-row"><label>이름</label><input type="text" id="edName"></div>
+        <div class="form-row"><label>플랜</label><input type="text" id="edPlan"></div>
+      </div>
+      <div class="form-2">
+        <div class="form-row"><label>구독 주기</label><select id="edCycle"><option value="year">연구독</option><option value="month">월구독</option></select></div>
+        <div class="form-row"><label>갱신일</label><input type="date" id="edAnchor"></div>
+      </div>
+      <div class="form-row"><label>바로가기 링크</label><input type="text" id="edLink" placeholder="https://..."></div>
+      <div class="admin-msg" id="edMsg"></div>
+    </div>
+    <div class="modal-foot">
+      <a class="modal-link" style="background:#2f6bff;color:#fff" href="javascript:void(0)" onclick="saveEdit()">저장</a>
     </div>
   </div>
 </div>
@@ -933,7 +973,7 @@
     </div>
     <div class="modal-foot">
       <div class="renew-line"><span class="renew-date" data-sub="runway"></span><label class="renew-toggle" data-sub="runway"><span class="rt-label">계속 갱신</span><input type="checkbox" onchange="toggleRenew('runway',this)"><span class="rt-track"></span></label></div>
-      <a class="modal-link" style="background:#0a0d13;color:#fff" href="https://runwayml.com" target="_blank" rel="noopener">
+      <a class="modal-link" data-link="runway" style="background:#0a0d13;color:#fff" href="https://app.runwayml.com/video-tools/teams/guest/ai-tools/generate" target="_blank" rel="noopener">
         <img src="Logos/Runway.png" alt="">Runway 바로가기 ↗
       </a>
     </div>
@@ -1292,9 +1332,94 @@ async function deleteSub(id){
   }catch(e){ alert('삭제 실패: '+e.message); }
 }
 
+/* ===== 기존(하드코딩) 구독 편집 (관리자, Supabase sub_edit) ===== */
+const BUILTIN_MODAL = {
+  gpt:'gptModal', runway:'rwModal', topaz:'tpModal', higgsfield:'hfModal',
+  mesh:'meModal', googleai:'gaModal', midjourney:'mjModal', seedance:'sdModal'
+};
+let EDITS = {};
+function rowForKey(key){
+  const mid = BUILTIN_MODAL[key];
+  return [...document.querySelectorAll('.card .row')].find(r=>(r.getAttribute('onclick')||'').indexOf("'"+mid+"'")>=0);
+}
+function linkForKey(key){
+  const m = document.getElementById(BUILTIN_MODAL[key]);
+  return m ? m.querySelector('.modal-foot a.modal-link, .modal-foot a.tp-dl') : null;
+}
+function applyEdit(key){
+  const e = EDITS[key]; if(!e) return;
+  const row = rowForKey(key);
+  if(row){
+    if(e.name){ const n=row.querySelector('.name'); if(n) n.textContent=e.name; }
+    if(e.plan){ const p=row.querySelector('.plan'); if(p){ const chev=p.querySelector('.chev'); p.textContent=''; p.appendChild(document.createTextNode(e.plan+' ')); if(chev) p.appendChild(chev); } }
+  }
+  if(e.link){ const a=linkForKey(key); if(a) a.href=e.link; }
+  if(SUBS[key] && (e.cycle||e.anchor)){ if(e.cycle) SUBS[key].cycle=e.cycle; if(e.anchor) SUBS[key].anchor=String(e.anchor).slice(0,10); renderSub(key); }
+}
+async function loadEdits(){
+  try{
+    const res = await fetch(SUPA_URL+'/rest/v1/sub_edit?select=*',{headers:{apikey:SUPA_ANON}});
+    if(res.ok){ (await res.json()).forEach(r=>{ EDITS[r.key]=r; }); }
+  }catch(_){}
+  Object.keys(BUILTIN_MODAL).forEach(applyEdit);
+}
+function injectEditBtns(){
+  Object.keys(BUILTIN_MODAL).forEach(key=>{
+    const row = rowForKey(key); if(!row || row._eb) return; row._eb=true;
+    const b = document.createElement('button');
+    b.className='row-edit'; b.type='button'; b.title='편집'; b.setAttribute('aria-label','편집');
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg>';
+    b.addEventListener('click', ev=>{ ev.stopPropagation(); openEdit(key); });
+    row.appendChild(b);
+  });
+}
+function openEdit(key){
+  if(!document.body.classList.contains('admin')) return;
+  const row = rowForKey(key);
+  const nameEl = row && row.querySelector('.name');
+  const planEl = row && row.querySelector('.plan');
+  const link = linkForKey(key);
+  const s = SUBS[key] || {};
+  const e = EDITS[key] || {};
+  document.getElementById('edTitle').textContent = (nameEl?nameEl.textContent:key) + ' 편집';
+  document.getElementById('edName').value = e.name || (nameEl?nameEl.textContent.trim():'');
+  document.getElementById('edPlan').value = e.plan || (planEl?planEl.textContent.replace('›','').trim():'');
+  document.getElementById('edCycle').value = s.cycle || 'year';
+  document.getElementById('edAnchor').value = (s.anchor||'').slice(0,10);
+  document.getElementById('edLink').value = e.link || (link?link.getAttribute('href'):'');
+  document.getElementById('edMsg').textContent='';
+  document.getElementById('editModal').dataset.key = key;
+  openModal('editModal');
+}
+async function saveEdit(){
+  const key = document.getElementById('editModal').dataset.key;
+  const msg = document.getElementById('edMsg');
+  const body = {
+    key,
+    name:   document.getElementById('edName').value.trim(),
+    plan:   document.getElementById('edPlan').value.trim(),
+    cycle:  document.getElementById('edCycle').value,
+    anchor: document.getElementById('edAnchor').value || null,
+    link:   document.getElementById('edLink').value.trim()
+  };
+  msg.style.color='#8a909c'; msg.textContent='저장 중…';
+  try{
+    const res = await fetch(SUPA_URL+'/rest/v1/sub_edit',{
+      method:'POST',
+      headers:{ apikey:SUPA_ANON, 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates' },
+      body: JSON.stringify(body)
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    EDITS[key] = body;
+    applyEdit(key);
+    closeModal('editModal');
+  }catch(e){ msg.style.color='#d94a52'; msg.textContent='저장 실패: '+e.message; }
+}
+
 /* 초기화: 추가 구독 먼저 → 토글 상태 적용 */
 Object.keys(SUBS).forEach(renderSub);
-(async ()=>{ await loadDynSubs(); await loadSubMeta(); })();
+injectEditBtns();
+(async ()=>{ await loadDynSubs(); await loadSubMeta(); await loadEdits(); })();
 
 /* ===== 관리자 로그인 (비번 7989, 새로고침해도 유지) ===== */
 const ADMIN_PW = "7989";
