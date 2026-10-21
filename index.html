@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0f0f0f">
+<meta name="theme-color" content="#eef1f6">
 <title>뉴스디자인 AI툴 구독 현황</title>
 <link rel="icon" type="image/svg+xml" href="Logos/appicon.svg">
 <link rel="icon" type="image/png" href="Logos/appicon.png">
@@ -19,127 +19,172 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#06070b;
-    --card:#14161e;
-    --card2:#1c1f2a;
-    --ink:#f3f4f7;
-    --sub:#9599a6;
-    --blue:#5b9bff;
+    --bg:#eef1f6;
+    --panel:#ffffff;
+    --card:#ffffff;
+    --card2:#f7f8fb;
+    --ink:#1f2430;
+    --sub:#8b93a3;
+    --blue:#2f6bff;
+    --blue-ink:#2f6bff;
+    --blue-soft:#eff5ff;
+    --blue-brd:#cfe0ff;
+    --blue-glow:rgba(59,130,246,.16);
+    --red:#e8646b;
     --red1:#e8646b;
     --red2:#d94a52;
-    --pink-bg:#3a2233;
+    --red-ink:#e14b53;
+    --red-brd:#f6cdd0;
+    --red-glow:rgba(225,75,83,.15);
+    --pink-bg:#fbe4f2;
     --pink-ink:#e879b8;
-    --line:#2a2d38;
-    --glass:rgba(22,27,44,0.42);
-    --glass-brd:rgba(255,255,255,0.10);
+    --tile:#f6f8fc;
+    --line:#edf0f5;
+    --tag-bg:#eef1f6;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   html,body{background:var(--bg);}
   body{
-    font-family:'Plus Jakarta Sans','Wanted Sans Variable','Pretendard','Apple SD Gothic Neo','Malgun Gothic',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    font-family:'Wanted Sans Variable','Pretendard','Apple SD Gothic Neo','Malgun Gothic',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     color:var(--ink);
-    padding:44px 20px 44px;
+    padding:40px 24px 60px;
     line-height:1.4;
     -webkit-font-smoothing:antialiased;
     min-height:100vh;
-    display:flex;
-    flex-direction:column;
   }
-  .wrap{max-width:600px;width:100%;margin:auto;position:relative;z-index:1;}
+  .num{font-family:'Plus Jakarta Sans',sans-serif;}
+  .wrap{max-width:782px;width:100%;margin:0 auto;position:relative;z-index:1;}
 
   /* header */
-  .head{padding:0 4px;margin-bottom:24px;}
-  .head .kicker{
-    display:inline-block;font-family:'Plus Jakarta Sans',monospace;
-    font-size:11.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
-    color:var(--blue);margin-bottom:14px;opacity:.85;
-  }
-  .head h1{font-size:42px;font-weight:700;letter-spacing:-.03em;line-height:1.04;}
-  .head .mail{margin-top:12px;color:var(--sub);font-size:15px;font-weight:500;letter-spacing:.01em;}
+  .head{padding:0 6px;margin-bottom:22px;}
+  .head h1{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.1;}
+  .head .mail{margin-top:9px;color:var(--sub);font-size:14px;font-weight:600;}
 
-  /* board */
-  .board{display:flex;align-items:flex-start;justify-content:center;gap:22px;}
-  .arrow{
-    flex:0 0 auto;align-self:center;
-    width:0;height:0;
-    border-top:13px solid transparent;
-    border-bottom:13px solid transparent;
-    border-left:16px solid #c3c8d3;
-    margin-top:6px;
+  /* top bar (근무표식 상태 바) */
+  .topbar{display:flex;align-items:center;gap:10px;margin:0 6px 20px;}
+  .tb-count{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--panel);border:1px solid var(--line);
+    padding:9px 16px;border-radius:999px;
+    font-size:13.5px;font-weight:700;color:var(--ink);
+    box-shadow:0 4px 14px -10px rgba(40,60,110,.3);
   }
+  .tb-count .tb-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px var(--blue-glow);}
+  .tb-count b{color:var(--blue-ink);font-weight:800;margin-left:1px;}
+  .tb-add{
+    display:none;margin-left:auto;align-items:center;gap:6px;
+    background:var(--blue-ink);color:#fff;border:none;cursor:pointer;
+    padding:10px 18px;border-radius:999px;font-family:inherit;
+    font-size:13.5px;font-weight:700;
+    box-shadow:0 8px 20px -10px rgba(47,107,255,.6);
+    transition:transform .15s ease,box-shadow .15s ease;
+  }
+  .tb-add:hover{transform:translateY(-1px);box-shadow:0 12px 26px -10px rgba(47,107,255,.7);}
+  body.admin .tb-add{display:inline-flex;}
 
-  .card{
-    flex:1 1 0;min-width:0;
-    background:var(--card);
-    border-radius:26px;
-    padding:30px 30px 34px;
-    box-shadow:0 18px 40px -24px rgba(30,40,80,.28),0 2px 6px rgba(30,40,80,.04);
+  /* board = 카드 그리드 */
+  .board{display:block;}
+  .group{margin-bottom:26px;}
+  .group:last-child{margin-bottom:0;}
+  .g-head{
+    display:flex;align-items:center;gap:9px;
+    margin:0 4px 12px;font-size:13px;font-weight:800;
+    letter-spacing:.01em;color:var(--sub);
   }
-  .card.after{align-self:flex-start;flex:0 1 600px;max-width:600px;}
-  .card h2{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-bottom:18px;}
+  .g-head .g-bar{width:4px;height:15px;border-radius:3px;background:var(--blue);}
+  .g-head .g-count{
+    background:var(--tag-bg);color:var(--sub);
+    font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;
+  }
+  .card{display:flex;flex-wrap:wrap;gap:16px;align-items:stretch;justify-content:flex-start;max-width:782px;}
 
-  .col-head{
-    display:flex;align-items:flex-end;
-    padding:0 12px 8px;
-  }
-  .col-head .lbl-date{
-    margin-left:auto;
-    width:118px;text-align:center;
-    color:var(--ink);font-size:15px;font-weight:700;
-  }
-
+  /* 각 AI툴 = 근무표식 카드 */
   .row{
-    display:grid;
-    grid-template-columns:42px 148px 1fr auto;
-    align-items:center;
-    gap:14px;
-    padding:10px 12px;
-    border-radius:15px;
-    transition:background .18s ease,transform .18s ease,box-shadow .18s ease,opacity .18s ease;
+    flex:0 0 250px;max-width:250px;min-width:0;
+    display:flex;flex-direction:column;gap:12px;
+    background:var(--panel);
+    border:1.5px solid var(--blue-brd);
+    border-radius:20px;
+    padding:16px 16px 17px;
+    position:relative;cursor:pointer;
+    box-shadow:0 10px 26px -16px var(--blue-glow),0 2px 6px rgba(40,60,110,.05);
+    transition:transform .16s ease,box-shadow .22s ease,border-color .22s ease;
   }
-  .after .row{grid-template-columns:42px 148px 1fr;}
-  .row .ico{width:42px;height:42px;border-radius:50%;overflow:hidden;background:#fff;}
-  .row .ico svg,.row .ico img{display:block;width:100%;height:100%;object-fit:cover;}
-  .row .name{font-size:18px;font-weight:700;letter-spacing:-.01em;}
-  .row .plan{color:var(--blue);font-size:17px;font-weight:700;}
-  .row .date{justify-self:end;}
-
-  .row:hover{
-    background:#ffffff;
-    transform:translateX(3px);
-    box-shadow:0 10px 24px -14px rgba(30,40,80,.32);
+  .row:hover{transform:translateY(-3px);box-shadow:0 18px 38px -16px var(--blue-glow),0 3px 10px rgba(40,60,110,.08);}
+  /* 상단 상태 점 */
+  .row::before{
+    content:'';position:absolute;top:16px;right:16px;
+    width:9px;height:9px;border-radius:50%;
+    background:var(--blue);box-shadow:0 0 0 4px var(--blue-glow);
   }
-  .row.expiring:hover{opacity:.92;}
-
-  .row .date .badge{
-    display:block;
-    width:118px;
-    text-align:center;
-    background:linear-gradient(180deg,var(--red1),var(--red2));
-    color:#fff;font-weight:700;font-size:15px;
-    padding:8px 0;border-radius:11px;
-    box-shadow:0 6px 14px -6px rgba(217,74,82,.7);
-    letter-spacing:.01em;
+  /* 헤더: 로고 + 이름 + 플랜뱃지 */
+  .r-head{display:flex;align-items:center;gap:10px;padding-right:20px;}
+  .ico{width:38px;height:38px;border-radius:50%;overflow:hidden;background:#fff;flex:0 0 auto;border:1px solid var(--line);}
+  .ico img,.ico svg{display:block;width:100%;height:100%;object-fit:cover;}
+  .r-name{min-width:0;flex:1 1 auto;}
+  .name{font-size:16.5px;font-weight:800;letter-spacing:-.02em;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .plan{
+    display:inline-block;margin-top:4px;
+    background:var(--tag-bg);color:var(--sub);
+    font-size:11.5px;font-weight:700;letter-spacing:.01em;
+    padding:3px 9px;border-radius:7px;line-height:1.25;
   }
-
-  /* dimmed: has an expiry date */
-  .row.expiring{opacity:.42;}
-
-  /* highlighted new row */
-  .row.new,.row.hl{
-    background:var(--pink-bg);
-    margin:6px 0;
+  .plan .chev{display:none;}
+  /* 상태 */
+  .t-status{font-size:12.5px;font-weight:800;color:var(--blue-ink);display:flex;align-items:center;gap:6px;margin-top:-3px;}
+  .t-status .st-dot{width:6px;height:6px;border-radius:50%;background:var(--blue-ink);}
+  /* 내부 타일(갱신 정보) */
+  .tcard{background:var(--tile);border-radius:13px;padding:11px 13px 12px;}
+  .tc-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;}
+  .tc-lbl{font-size:11.5px;font-weight:700;color:var(--sub);}
+  .tc-dday{
+    background:var(--blue-ink);color:#fff;font-size:11.5px;font-weight:800;
+    padding:3px 9px;border-radius:999px;letter-spacing:.01em;
   }
-  .row.new .plan,.row.hl .plan{color:var(--pink-ink);}
-  .row.new:hover{
-    background:#f8d4ec;
-    transform:translateX(3px);
-    box-shadow:0 10px 24px -14px rgba(224,80,159,.4);
+  .tc-date{font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+  .tc-cycle{font-size:11.5px;font-weight:600;color:var(--sub);margin-top:3px;}
+  .r-foot{display:flex;align-items:center;justify-content:flex-end;margin-top:auto;}
+  .r-more{
+    border:none;background:none;font-family:inherit;padding:4px 2px;margin:-4px -2px;cursor:pointer;
+    font-size:12px;font-weight:700;color:var(--blue-ink);border-radius:7px;
+    transition:background .14s ease;
   }
+  .r-more:hover{background:var(--blue-soft);}
+  .row.expiring .r-more:hover{background:var(--red-soft,#fdeeef);}
+  .r-more .chev{font-weight:900;margin-left:2px;display:inline-block;transition:transform .16s ease;}
+  .row:hover .r-more .chev{transform:translateX(3px);}
 
-  /* 관리자 모드 파란 점 */
+  /* 만료 예정(계속 갱신 OFF) = 빨강 */
+  .row.expiring{border-color:var(--red-brd);box-shadow:0 10px 26px -16px var(--red-glow),0 2px 6px rgba(40,60,110,.05);}
+  .row.expiring::before{background:var(--red);box-shadow:0 0 0 4px var(--red-glow);}
+  .row.expiring .t-status{color:var(--red-ink);}
+  .row.expiring .t-status .st-dot{background:var(--red-ink);}
+  .row.expiring .tc-dday{background:var(--red-ink);}
+  .row.expiring .r-more{color:var(--red-ink);}
+  .row.expiring:hover{box-shadow:0 18px 38px -16px var(--red-glow),0 3px 10px rgba(40,60,110,.08);}
+
+  /* 신규 강조(분홍) */
+  .row.new{border-color:#f3c7e4;box-shadow:0 10px 26px -16px rgba(224,80,159,.25),0 2px 6px rgba(40,60,110,.05);}
+  .row.new::before{background:var(--pink-ink);box-shadow:0 0 0 4px rgba(224,80,159,.15);}
+  .row.new .t-status{color:var(--pink-ink);}
+  .row.new .t-status .st-dot{background:var(--pink-ink);}
+
+  /* 관리자 편집 연필 */
+  .row-edit{
+    position:absolute;top:13px;right:36px;
+    width:26px;height:26px;border-radius:8px;border:1px solid var(--line);
+    background:#fff;color:var(--sub);cursor:pointer;
+    display:none;align-items:center;justify-content:center;z-index:4;
+    box-shadow:0 3px 8px -4px rgba(40,60,110,.3);
+    transition:background .15s ease,color .15s ease;
+  }
+  .row-edit svg{width:13px;height:13px;}
+  .row-edit:hover{background:var(--blue-soft);color:var(--blue-ink);}
+  body.admin .row-edit{display:flex;}
+
+  /* 관리자 모드 파란 점 (제목 옆) */
   .admin-dot{
-    display:none;width:12px;height:12px;border-radius:50%;
+    display:none;width:11px;height:11px;border-radius:50%;
     background:#2f6bff;vertical-align:middle;margin-left:6px;
     box-shadow:0 0 0 4px rgba(47,107,255,.18);
   }
@@ -222,10 +267,7 @@
   /* ── 첫 진입 애니메이션 (슈슈슉) ── */
   @keyframes riseIn{from{opacity:0;transform:translateY(20px);}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}}
-  .head{animation:fadeUp .6s ease .05s backwards;}
-  .card{animation:fadeUp .6s cubic-bezier(.2,.8,.2,1) backwards;}
-  .before{animation-delay:.15s;}
-  .after{animation-delay:.28s;}
+  .head,.topbar{animation:fadeUp .6s ease .05s backwards;}
   .row{animation:riseIn .7s cubic-bezier(.2,.75,.25,1) backwards;}
   .note{animation:fadeUp .6s ease 1.4s backwards;}
 
@@ -362,159 +404,20 @@
     .hf-table td,.hf-table th{padding:8px 7px;}
   }
 
-  @media (max-width:760px){
-    body{padding:22px 18px 22px;}
-    .head h1{font-size:30px;}
-    .head .mail{font-size:14px;}
-    .board{flex-direction:column;gap:14px;}
-    .arrow{transform:rotate(90deg);align-self:center;margin:2px 0;}
-    .card{width:100%;padding:20px;border-radius:24px;}
-    .card.after{flex:0 0 auto;max-width:none;}
-    .card h2{font-size:21px;}
-    .row{gap:11px;padding:9px 10px;grid-template-columns:38px 96px 1fr auto;}
-    .after .row{grid-template-columns:38px 96px 1fr;}
-    .row .ico{width:38px;height:38px;}
-    .row .name{font-size:16px;}
-    .row .plan{font-size:15px;}
-    .row .date .badge{font-size:13px;padding:7px 0;width:98px;}
-    .col-head .lbl-date{font-size:13px;width:98px;}
+  @media (min-width:621px) and (max-width:900px){
+    .wrap{max-width:532px;}
+  }
+  @media (max-width:620px){
+    body{padding:26px 16px 48px;}
+    .head h1{font-size:23px;}
+    .wrap{max-width:430px;}
+    .card{gap:12px;justify-content:stretch;}
+    .row{flex:1 1 100%;max-width:none;}
   }
 
-  /* ===== 유리(글래스) 표면 + 다크 보정 ===== */
-  .card{
-    background:var(--glass);
-    border:1px solid var(--glass-brd);
-    -webkit-backdrop-filter:blur(34px) saturate(1.35);
-    backdrop-filter:blur(34px) saturate(1.35);
-    box-shadow:0 34px 90px -34px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.07);
-    position:relative;
-    transition:transform .16s ease, box-shadow .3s ease;
-  }
-  /* 마우스 따라오는 반사 스트로크(외곽 테두리) */
-  .card::before{
-    content:'';position:absolute;inset:0;border-radius:inherit;padding:1.4px;
-    background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),
-      rgba(175,205,255,.95), rgba(120,155,255,.28) 42%, rgba(255,255,255,.04) 70%);
-    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor;mask-composite:exclude;
-    pointer-events:none;opacity:0;transition:opacity .3s ease;z-index:2;
-  }
-  .card:hover::before{opacity:1;}
-  .card:hover{box-shadow:0 40px 110px -34px rgba(20,50,160,.55), inset 0 1px 0 rgba(255,255,255,.09);}
-  /* 각 행 = 유리 타일 */
-  .row{
-    border:1px solid rgba(255,255,255,.055);
-    background:rgba(255,255,255,.02);
-    margin-bottom:5px;
-    position:relative;
-    transform-style:preserve-3d;
-    transition:transform .16s ease, border-color .28s ease, box-shadow .28s ease, background .28s ease, opacity .18s ease;
-  }
-  .row::after{
-    content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-    background:linear-gradient(115deg,transparent 35%,rgba(150,185,255,.16) 50%,transparent 65%);
-    background-size:250% 100%;background-position:130% 0;
-    opacity:0;transition:opacity .35s ease;
-  }
-  .row:hover{
-    transform:none;
-    background:rgba(120,160,255,.07);
-    border-color:rgba(120,165,255,.34);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
-  }
-  .row:hover::after{opacity:1;animation:tileSheen 1.05s ease forwards;}
-  @keyframes tileSheen{from{background-position:130% 0;}to{background-position:-50% 0;}}
-  .col-head .lbl-date{color:var(--ink);}
-  .card h2{
-    font-size:13.5px;font-weight:700;letter-spacing:.02em;color:var(--sub);
-    margin-bottom:22px;display:flex;align-items:center;gap:10px;
-  }
-  .card h2::before{
-    content:'§01';font-family:'Plus Jakarta Sans',ui-monospace,monospace;font-size:10.5px;font-weight:800;
-    letter-spacing:.08em;color:var(--blue);border:1px solid var(--glass-brd);
-    padding:4px 8px;border-radius:7px;background:rgba(91,155,255,.09);
-  }
-  .card{padding:24px;border-radius:28px;}
-  .card .row:last-child{margin-bottom:0;}
-  /* 관리자 행 편집 버튼 */
-  .row-edit{
-    position:absolute;right:10px;top:50%;transform:translateY(-50%);
-    width:28px;height:28px;border-radius:8px;border:1px solid var(--glass-brd);
-    background:rgba(255,255,255,.06);color:var(--sub);cursor:pointer;
-    display:none;align-items:center;justify-content:center;z-index:4;
-    transition:background .15s ease,color .15s ease;
-  }
-  .row-edit svg{width:14px;height:14px;}
-  .row-edit:hover{background:rgba(120,160,255,.22);color:#cfe0ff;}
-  body.admin .row-edit{display:flex;opacity:.55;}
-  body.admin .row:hover .row-edit{opacity:1;}
-  .gear-btn{background:var(--card2);color:var(--sub);box-shadow:0 8px 22px -10px rgba(0,0,0,.6);}
-  .gear-btn:hover{color:var(--blue);}
-  body.admin .gear-btn{color:var(--blue);box-shadow:0 8px 22px -10px rgba(74,148,255,.4),0 0 0 2px rgba(74,148,255,.3);}
-  .admin-input,.form-row input[type=text],.form-row input[type=date],.form-row select,.form-row textarea{background:var(--card2);border-color:var(--line);color:var(--ink);}
-  .admin-input:focus,.form-row input:focus,.form-row select:focus,.form-row textarea:focus{background:#2f2f31;border-color:var(--blue);}
-  .admin-input::placeholder,.form-row input::placeholder,.form-row textarea::placeholder{color:#6b6b70;}
-  .admin-logout{background:var(--card2);color:var(--sub);}
-  .admin-logout:hover{background:#333;}
-  .sm-item{background:var(--card2);color:var(--ink);}
-  .logo-prev{border-color:var(--line);}
-  .notify-btn{background:var(--card2);color:var(--ink);box-shadow:0 8px 20px -14px rgba(0,0,0,.6);}
-  .notify-btn.on{background:rgba(31,157,85,.2);color:#4ade80;}
-  .notify-btn.on svg{color:#4ade80;}
-  .modal-overlay{background:rgba(4,6,12,.6);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);}
-  .modal{
-    background:rgba(18,22,36,.8);
-    border:1px solid var(--glass-brd);
-    -webkit-backdrop-filter:blur(40px) saturate(1.35);
-    backdrop-filter:blur(40px) saturate(1.35);
-    box-shadow:0 44px 120px -34px rgba(0,0,0,.88), inset 0 1px 0 rgba(255,255,255,.08);
-  }
-  .modal-head{background:linear-gradient(135deg,rgba(70,95,165,.20),rgba(30,36,58,.08));border-bottom:1px solid rgba(255,255,255,.05);}
-  .mh-title{color:var(--ink);font-weight:700;letter-spacing:-.01em;}
-  .mh-sub{color:var(--sub);}
-  .mh-close{background:rgba(255,255,255,.08);color:#cfcfd4;}
-  .mh-close:hover{background:rgba(255,255,255,.16);}
-  .modal-foot{background:rgba(255,255,255,.02);border-top-color:rgba(255,255,255,.06);}
-  .mb-sec{color:var(--ink);}
-  .mb-sec .dot{background:var(--blue);}
-  .hf-cap{color:var(--sub);}
-  .hf-chips span{background:rgba(74,148,255,.14);color:#8fbcff;}
-  .hf-note{background:var(--card2);color:var(--sub);}
-  .hf-table th{background:var(--card2);color:var(--sub);}
-  .hf-table td{border-bottom-color:var(--line);color:var(--ink);}
-  .hf-table td.model{color:var(--blue);}
-  .hf-table td.set{color:var(--sub);}
-  .hf-table th.cred,.hf-table td.cred{background:rgba(31,157,85,.16);}
-  .hf-table td.cred{color:#4ade80;}
-  .tp-item{background:var(--card2);}
-  .tp-item:hover{background:#2f2f31;}
-  .tp-txt .n{color:var(--ink);}
-  .tp-txt .d{color:var(--sub);}
-  .tp-dl,.modal-link{border:1px solid var(--line);}
-  .tp-dl{background:#2a2a2d;}
-  .tp-dl:hover{background:#343437;}
-  .modal-link img{background:#fff;}
-  .rt-track{background:#3a3a3d;}
-  .renew-date{color:var(--sub);}
-
-  /* ===== 카드 주변 유기적 파란 글로우 (살아있는 느낌) ===== */
-  .bg-orbs{position:fixed;top:50%;left:50%;width:min(820px,98vw);height:min(940px,150vh);transform:translate(-50%,-50%);z-index:0;pointer-events:none;}
-  .bg-orbs span{position:absolute;border-radius:50%;filter:blur(60px);will-change:transform,opacity;}
-  .bg-orbs span:nth-child(1){width:240px;height:240px;left:-14%;top:-2%;background:radial-gradient(circle,rgba(47,119,246,.92),rgba(47,119,246,0) 68%);animation:orbA 17s ease-in-out infinite;}
-  .bg-orbs span:nth-child(2){width:470px;height:470px;right:-20%;top:6%;background:radial-gradient(circle,rgba(56,189,248,.82),rgba(56,189,248,0) 68%);animation:orbB 25s ease-in-out infinite;}
-  .bg-orbs span:nth-child(3){width:300px;height:300px;left:-10%;bottom:0%;background:radial-gradient(circle,rgba(74,148,255,.9),rgba(74,148,255,0) 68%);animation:orbC 19s ease-in-out infinite;}
-  .bg-orbs span:nth-child(4){width:560px;height:560px;right:-18%;bottom:-14%;background:radial-gradient(circle,rgba(109,94,255,.72),rgba(109,94,255,0) 68%);animation:orbD 30s ease-in-out infinite;}
-  .bg-orbs span:nth-child(5){width:180px;height:180px;left:28%;top:-9%;background:radial-gradient(circle,rgba(94,201,255,.9),rgba(94,201,255,0) 68%);animation:orbE 14s ease-in-out infinite;}
-  @keyframes orbA{0%,100%{transform:translate(0,0) scale(1);opacity:.6}30%{transform:translate(80px,54px) scale(1.22);opacity:.9}62%{transform:translate(38px,96px) scale(.9);opacity:.6}}
-  @keyframes orbB{0%,100%{transform:translate(0,0) scale(1);opacity:.5}38%{transform:translate(-88px,66px) scale(1.18);opacity:.8}72%{transform:translate(-36px,-52px) scale(.86);opacity:.55}}
-  @keyframes orbC{0%,100%{transform:translate(0,0) scale(1);opacity:.62}34%{transform:translate(70px,-72px) scale(1.24);opacity:.9}64%{transform:translate(108px,-30px) scale(.92);opacity:.64}}
-  @keyframes orbD{0%,100%{transform:translate(0,0) scale(1);opacity:.48}46%{transform:translate(-70px,-58px) scale(1.15);opacity:.72}}
-  @keyframes orbE{0%,100%{transform:translate(0,0) scale(1);opacity:.5}50%{transform:translate(64px,90px) scale(1.35);opacity:.85}}
-  @media (prefers-reduced-motion:reduce){ .bg-orbs span{animation:none;} }
 </style>
 </head>
 <body>
-<div class="bg-orbs"><span></span><span></span><span></span><span></span><span></span></div>
 <div class="wrap">
 
   <div class="head">
@@ -522,51 +425,142 @@
     <div class="mail">newsdesign1991@gmail.com</div>
   </div>
 
+  <div class="topbar">
+    <span class="tb-count"><span class="tb-dot"></span>구독 중 <b id="activeCount">8</b></span>
+    <button class="tb-add" type="button" onclick="openSubForm()">+ 구독 추가</button>
+  </div>
+
   <div class="board">
 
-    <!-- 현재 구독 -->
-    <section class="card after">
-      <div class="row linkrow" onclick="openModal('gptModal')" role="button" tabindex="0" aria-label="ChatGPT 주요 기능 보기">
-        <span class="ico" data-logo="gpt"></span>
-        <span class="name">Chat GPT</span>
-        <span class="plan">Plus X1 <span class="chev">›</span></span>
-      </div>
-      <div class="row linkrow" onclick="openModal('rwModal')" role="button" tabindex="0" aria-label="Runway 주요 기능 보기">
-        <span class="ico" data-logo="runway"></span>
-        <span class="name">Runway</span>
-        <span class="plan">Unlimited <span class="chev">›</span></span>
-      </div>
-      <div class="row linkrow" onclick="openModal('tpModal')" role="button" tabindex="0" aria-label="Topaz 제품 보기">
-        <span class="ico" data-logo="topaz"></span>
-        <span class="name">Topaz</span>
-        <span class="plan">Studio <span class="chev">›</span></span>
-      </div>
-      <div class="row linkrow" onclick="openModal('hfModal')" role="button" tabindex="0" aria-label="Higgsfield 주요 기능 보기">
-        <span class="ico" data-logo="higgsfield"></span>
-        <span class="name">Higgsfield</span>
-        <span class="plan">Ultra 6,000 <span class="chev">›</span></span>
-      </div>
-      <div class="row linkrow" onclick="openModal('meModal')" role="button" tabindex="0" aria-label="Mesh AI 주요 기능 보기">
-        <span class="ico" data-logo="mesh"></span>
-        <span class="name">Mesh AI</span>
-        <span class="plan">Premium <span class="chev">›</span></span>
-      </div>
-      <div class="row linkrow" onclick="openModal('gaModal')" role="button" tabindex="0" aria-label="Google AI 주요 기능 보기">
-        <span class="ico" data-logo="google"></span>
-        <span class="name">Google AI</span>
-        <span class="plan">Pro <span class="chev">›</span></span>
-      </div>
-      <div class="row linkrow" onclick="openModal('mjModal')" role="button" tabindex="0" aria-label="Midjourney 주요 기능 보기">
-        <span class="ico" data-logo="midjourney"></span>
-        <span class="name">Midjourney</span>
-        <span class="plan">Pro <span class="chev">›</span></span>
-      </div>
-      <div class="row linkrow" onclick="openModal('sdModal')" role="button" tabindex="0" aria-label="Seedance 주요 기능 보기">
-        <span class="ico" data-logo="seedance"></span>
-        <span class="name">Seedance</span>
-        <span class="plan">표준 <span class="chev">›</span></span>
-      </div>
-    </section>
+    <!-- LLM -->
+    <div class="group">
+      <div class="g-head"><span class="g-bar"></span>LLM · 대화형 AI<span class="g-count">2</span></div>
+      <section class="card">
+        <div class="row linkrow" data-sub="gpt" onclick="openSite('gpt')" role="button" tabindex="0" aria-label="Chat GPT 사이트 열기">
+          <div class="r-head">
+            <span class="ico" data-logo="gpt"></span>
+            <span class="r-name"><span class="name">Chat GPT</span><span class="plan">Plus X1 <span class="chev">›</span></span></span>
+          </div>
+          <div class="t-status" data-sub="gpt"><span class="st-dot"></span>구독 중</div>
+          <div class="tcard" data-sub="gpt">
+            <div class="tc-row"><span class="tc-lbl">다음 갱신</span><span class="tc-dday num"></span></div>
+            <div class="tc-date num"></div><div class="tc-cycle"></div>
+          </div>
+          <div class="r-foot"><button type="button" class="r-more" onclick="event.stopPropagation();openDetail(this)">자세히 <span class="chev">›</span></button></div>
+        </div>
+        <div class="row linkrow" data-sub="googleai" onclick="openSite('googleai')" role="button" tabindex="0" aria-label="Google AI 사이트 열기">
+          <div class="r-head">
+            <span class="ico" data-logo="google"></span>
+            <span class="r-name"><span class="name">Google AI</span><span class="plan">Pro <span class="chev">›</span></span></span>
+          </div>
+          <div class="t-status" data-sub="googleai"><span class="st-dot"></span>구독 중</div>
+          <div class="tcard" data-sub="googleai">
+            <div class="tc-row"><span class="tc-lbl">다음 갱신</span><span class="tc-dday num"></span></div>
+            <div class="tc-date num"></div><div class="tc-cycle"></div>
+          </div>
+          <div class="r-foot"><button type="button" class="r-more" onclick="event.stopPropagation();openDetail(this)">자세히 <span class="chev">›</span></button></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 영상 -->
+    <div class="group">
+      <div class="g-head"><span class="g-bar"></span>영상 생성<span class="g-count">3</span></div>
+      <section class="card">
+        <div class="row linkrow" data-sub="runway" onclick="openSite('runway')" role="button" tabindex="0" aria-label="Runway 사이트 열기">
+          <div class="r-head">
+            <span class="ico" data-logo="runway"></span>
+            <span class="r-name"><span class="name">Runway</span><span class="plan">Unlimited <span class="chev">›</span></span></span>
+          </div>
+          <div class="t-status" data-sub="runway"><span class="st-dot"></span>구독 중</div>
+          <div class="tcard" data-sub="runway">
+            <div class="tc-row"><span class="tc-lbl">다음 갱신</span><span class="tc-dday num"></span></div>
+            <div class="tc-date num"></div><div class="tc-cycle"></div>
+          </div>
+          <div class="r-foot"><button type="button" class="r-more" onclick="event.stopPropagation();openDetail(this)">자세히 <span class="chev">›</span></button></div>
+        </div>
+        <div class="row linkrow" data-sub="higgsfield" onclick="openSite('higgsfield')" role="button" tabindex="0" aria-label="Higgsfield 사이트 열기">
+          <div class="r-head">
+            <span class="ico" data-logo="higgsfield"></span>
+            <span class="r-name"><span class="name">Higgsfield</span><span class="plan">Ultra 6,000 <span class="chev">›</span></span></span>
+          </div>
+          <div class="t-status" data-sub="higgsfield"><span class="st-dot"></span>구독 중</div>
+          <div class="tcard" data-sub="higgsfield">
+            <div class="tc-row"><span class="tc-lbl">다음 갱신</span><span class="tc-dday num"></span></div>
+            <div class="tc-date num"></div><div class="tc-cycle"></div>
+          </div>
+          <div class="r-foot"><button type="button" class="r-more" onclick="event.stopPropagation();openDetail(this)">자세히 <span class="chev">›</span></button></div>
+        </div>
+        <div class="row linkrow" data-sub="seedance" onclick="openSite('seedance')" role="button" tabindex="0" aria-label="Seedance 사이트 열기">
+          <div class="r-head">
+            <span class="ico" data-logo="seedance"></span>
+            <span class="r-name"><span class="name">Seedance</span><span class="plan">표준 <span class="chev">›</span></span></span>
+          </div>
+          <div class="t-status" data-sub="seedance"><span class="st-dot"></span>구독 중</div>
+          <div class="tcard" data-sub="seedance">
+            <div class="tc-row"><span class="tc-lbl">다음 갱신</span><span class="tc-dday num"></span></div>
+            <div class="tc-date num"></div><div class="tc-cycle"></div>
+          </div>
+          <div class="r-foot"><button type="button" class="r-more" onclick="event.stopPropagation();openDetail(this)">자세히 <span class="chev">›</span></button></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 이미지·사진 -->
+    <div class="group">
+      <div class="g-head"><span class="g-bar"></span>이미지 · 사진<span class="g-count">2</span></div>
+      <section class="card">
+        <div class="row linkrow" data-sub="midjourney" onclick="openSite('midjourney')" role="button" tabindex="0" aria-label="Midjourney 사이트 열기">
+          <div class="r-head">
+            <span class="ico" data-logo="midjourney"></span>
+            <span class="r-name"><span class="name">Midjourney</span><span class="plan">Pro <span class="chev">›</span></span></span>
+          </div>
+          <div class="t-status" data-sub="midjourney"><span class="st-dot"></span>구독 중</div>
+          <div class="tcard" data-sub="midjourney">
+            <div class="tc-row"><span class="tc-lbl">다음 갱신</span><span class="tc-dday num"></span></div>
+            <div class="tc-date num"></div><div class="tc-cycle"></div>
+          </div>
+          <div class="r-foot"><button type="button" class="r-more" onclick="event.stopPropagation();openDetail(this)">자세히 <span class="chev">›</span></button></div>
+        </div>
+        <div class="row linkrow" data-sub="topaz" onclick="openSite('topaz')" role="button" tabindex="0" aria-label="Topaz 사이트 열기">
+          <div class="r-head">
+            <span class="ico" data-logo="topaz"></span>
+            <span class="r-name"><span class="name">Topaz</span><span class="plan">Studio <span class="chev">›</span></span></span>
+          </div>
+          <div class="t-status" data-sub="topaz"><span class="st-dot"></span>구독 중</div>
+          <div class="tcard" data-sub="topaz">
+            <div class="tc-row"><span class="tc-lbl">다음 갱신</span><span class="tc-dday num"></span></div>
+            <div class="tc-date num"></div><div class="tc-cycle"></div>
+          </div>
+          <div class="r-foot"><button type="button" class="r-more" onclick="event.stopPropagation();openDetail(this)">자세히 <span class="chev">›</span></button></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 3D -->
+    <div class="group">
+      <div class="g-head"><span class="g-bar"></span>3D<span class="g-count">1</span></div>
+      <section class="card">
+        <div class="row linkrow" data-sub="mesh" onclick="openSite('mesh')" role="button" tabindex="0" aria-label="Mesh AI 사이트 열기">
+          <div class="r-head">
+            <span class="ico" data-logo="mesh"></span>
+            <span class="r-name"><span class="name">Mesh AI</span><span class="plan">Premium <span class="chev">›</span></span></span>
+          </div>
+          <div class="t-status" data-sub="mesh"><span class="st-dot"></span>구독 중</div>
+          <div class="tcard" data-sub="mesh">
+            <div class="tc-row"><span class="tc-lbl">다음 갱신</span><span class="tc-dday num"></span></div>
+            <div class="tc-date num"></div><div class="tc-cycle"></div>
+          </div>
+          <div class="r-foot"><button type="button" class="r-more" onclick="event.stopPropagation();openDetail(this)">자세히 <span class="chev">›</span></button></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 기타 (관리자 추가) -->
+    <div class="group" id="grpEtc" style="display:none">
+      <div class="g-head"><span class="g-bar"></span>기타<span class="g-count" id="etcCount">0</span></div>
+      <section class="card after"></section>
+    </div>
 
   </div>
 
@@ -1075,21 +1069,17 @@ document.querySelectorAll('.row.new,.row.linkrow').forEach(row=>{
   });
 });
 
-/* 전체 카드 틸트 + 마우스 따라오는 반사 스트로크 (유기적 재질감) */
-function bindTilt(){
-  const card = document.querySelector('.card');
-  if(!card || card._tilt) return; card._tilt = true;
-  card.addEventListener('mousemove', e=>{
-    const r = card.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width;
-    const y = (e.clientY - r.top) / r.height;
-    card.style.setProperty('--mx', (x*100).toFixed(1)+'%');
-    card.style.setProperty('--my', (y*100).toFixed(1)+'%');
-    card.style.transform = 'perspective(1150px) rotateX(' + (-(y-0.5)*5.4).toFixed(2) + 'deg) rotateY(' + ((x-0.5)*7).toFixed(2) + 'deg)';
-  });
-  card.addEventListener('mouseleave', ()=>{ card.style.transform = ''; });
+/* 구독 중 개수 갱신 (상태 바 + 기타 그룹 표시) */
+function updateCount(){
+  const total = document.querySelectorAll('.board .row').length;
+  const el = document.getElementById('activeCount');
+  if(el) el.textContent = total;
+  const etcN = document.querySelectorAll('.card.after .row').length;
+  const grp = document.getElementById('grpEtc');
+  const etcC = document.getElementById('etcCount');
+  if(grp) grp.style.display = etcN ? '' : 'none';
+  if(etcC) etcC.textContent = etcN;
 }
-bindTilt();
 
 /* ===== Supabase 설정 (구독일 토글 + 푸시 공용) ===== */
 const SUPA_URL = "https://ntpoaqnhnwrpenstqhwb.supabase.co";
@@ -1120,20 +1110,53 @@ function fmtRenew(cycle, dt){
   if (cycle==='month') return `매월 ${dt.getDate()}일 갱신`;
   return `${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일 갱신`;
 }
+function dDay(dt){
+  const today = new Date(); today.setHours(0,0,0,0);
+  return Math.round((dt - today)/86400000);
+}
 function renderSub(key){
   const s = SUBS[key]; if(!s) return;
   const dateEl = document.querySelector('.renew-date[data-sub="'+key+'"]');
   const cb = document.querySelector('.renew-toggle[data-sub="'+key+'"] input');
   if(cb) cb.checked = s.autorenew;
+
+  const expiring = !s.autorenew;
+  let dt, cycleTxt;
+  if(s.autorenew){
+    dt = nextRenew(s.cycle, s.anchor);
+    cycleTxt = (s.cycle==='month' ? '매월 자동 갱신' : '연 1회 자동 갱신');
+  } else {
+    const [y,m,d] = s.anchor.split('-').map(Number);
+    dt = new Date(y, m-1, d);
+    cycleTxt = (s.cycle==='month' ? '매월' : '연 1회') + ' · 만료 예정';
+  }
+  const dd = dDay(dt);
+
+  // 팝업 하단 날짜
   if(dateEl){
     if(s.autorenew){
       dateEl.classList.remove('expiring');
-      dateEl.textContent = fmtRenew(s.cycle, nextRenew(s.cycle, s.anchor));
+      dateEl.textContent = fmtRenew(s.cycle, dt);
     } else {
       dateEl.classList.add('expiring');
       const [y,m,d] = s.anchor.split('-').map(Number);
       dateEl.textContent = (s.cycle==='month' ? `매월 ${d}일` : `${y}년 ${m}월 ${d}일`) + ' 만료 예정';
     }
+  }
+
+  // 근무표식 카드
+  const row  = document.querySelector('.row[data-sub="'+key+'"]');
+  const stat = document.querySelector('.t-status[data-sub="'+key+'"]');
+  const tc   = document.querySelector('.tcard[data-sub="'+key+'"]');
+  if(row) row.classList.toggle('expiring', expiring);
+  if(stat) stat.innerHTML = '<span class="st-dot"></span>' + (expiring ? '만료 예정' : '구독 중');
+  if(tc){
+    const dday = tc.querySelector('.tc-dday');
+    const dcel = tc.querySelector('.tc-date');
+    const cyc  = tc.querySelector('.tc-cycle');
+    if(dday) dday.textContent = dd>=0 ? ('D-'+dd) : ('D+'+Math.abs(dd));
+    if(dcel) dcel.textContent = `${dt.getFullYear()}. ${dt.getMonth()+1}. ${dt.getDate()}`;
+    if(cyc)  cyc.textContent = cycleTxt;
   }
 }
 async function loadSubMeta(){
@@ -1180,19 +1203,28 @@ function renderDynSubs(){
     const card = document.querySelector(isBefore ? '.card.before' : '.card.after');
     if(!card) return;
 
-    // 행
+    // 카드
     const row = document.createElement('div');
     row.className = 'row ' + (s.highlight ? 'new' : 'linkrow');
     row.setAttribute('data-dyn', id);
+    row.setAttribute('data-sub', id);
     row.setAttribute('role','button');
     row.setAttribute('tabindex','0');
-    row.onclick = ()=>openModal('m-'+id);
+    row.onclick = ()=>openSite(id);
     row.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();row.click();} });
     row.innerHTML =
-      '<span class="ico">'+(s.logo?'<img src="'+esc(s.logo)+'" alt="">':'')+'</span>'+
-      '<span class="name">'+esc(s.name)+'</span>'+
-      '<span class="plan">'+esc(s.plan||'')+' <span class="chev">›</span></span>'+
-      (isBefore ? '<span class="date"></span>' : '');
+      '<div class="r-head">'+
+        '<span class="ico">'+(s.logo?'<img src="'+esc(s.logo)+'" alt="">':'')+'</span>'+
+        '<span class="r-name"><span class="name">'+esc(s.name)+'</span>'+
+          (s.plan?'<span class="plan">'+esc(s.plan)+' <span class="chev">›</span></span>':'')+
+        '</span>'+
+      '</div>'+
+      '<div class="t-status" data-sub="'+id+'"><span class="st-dot"></span>구독 중</div>'+
+      '<div class="tcard" data-sub="'+id+'">'+
+        '<div class="tc-row"><span class="tc-lbl">다음 갱신</span><span class="tc-dday num"></span></div>'+
+        '<div class="tc-date num"></div><div class="tc-cycle"></div>'+
+      '</div>'+
+      '<div class="r-foot"><button type="button" class="r-more" onclick="event.stopPropagation();openDetail(this)">자세히 <span class="chev">›</span></button></div>';
     card.appendChild(row);
 
     // 팝업
@@ -1231,7 +1263,7 @@ function renderDynSubs(){
     card.querySelectorAll('.row').forEach((r,i)=>{ r.style.animationDelay = (base + i*0.13).toFixed(2)+'s'; });
   });
   renderSubManage();
-  if(typeof bindTilt==='function') bindTilt();
+  updateCount();
 }
 
 /* 관리자 패널의 구독 관리 목록 */
@@ -1339,12 +1371,23 @@ const BUILTIN_MODAL = {
 };
 let EDITS = {};
 function rowForKey(key){
-  const mid = BUILTIN_MODAL[key];
-  return [...document.querySelectorAll('.card .row')].find(r=>(r.getAttribute('onclick')||'').indexOf("'"+mid+"'")>=0);
+  return document.querySelector('.card .row[data-sub="'+key+'"]');
 }
+function modalIdFor(key){ return BUILTIN_MODAL[key] || ('m-'+key); }
 function linkForKey(key){
-  const m = document.getElementById(BUILTIN_MODAL[key]);
+  const m = document.getElementById(modalIdFor(key));
   return m ? m.querySelector('.modal-foot a.modal-link, .modal-foot a.tp-dl') : null;
+}
+/* 카드 본체 클릭 → 해당 사이트 바로가기 (모달 하단 링크 = 편집값 자동 반영) */
+function openSite(key){
+  const a = linkForKey(key);
+  const href = a ? a.getAttribute('href') : null;
+  if(href && href !== 'javascript:void(0)') window.open(href, '_blank', 'noopener');
+}
+/* '자세히' 클릭 → 팝업 */
+function openDetail(el){
+  const row = el.closest('.row'); if(!row) return;
+  openModal(modalIdFor(row.getAttribute('data-sub')));
 }
 function applyEdit(key){
   const e = EDITS[key]; if(!e) return;
@@ -1419,6 +1462,7 @@ async function saveEdit(){
 /* 초기화: 추가 구독 먼저 → 토글 상태 적용 */
 Object.keys(SUBS).forEach(renderSub);
 injectEditBtns();
+updateCount();
 (async ()=>{ await loadDynSubs(); await loadSubMeta(); await loadEdits(); })();
 
 /* ===== 관리자 로그인 (비번 7989, 새로고침해도 유지) ===== */
